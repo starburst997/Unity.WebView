@@ -7,4 +7,4 @@ Support iOS / Android / Mac
 
 This overlay a native webview on top of Unity (not a texture in world space)
 
-You need to build the binary yourself for Android / Mac (`Source~/Mac/install.sh` / `Source~/Android/install.sh`)
+You need to build the binary yourself for Android / Mac (`Source~/Mac/install.sh` / `Source~/Android/install.sh --unity UNITY_PATH`)
