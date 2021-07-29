@@ -2,7 +2,6 @@
 
 cd "$(dirname "$0")"
 
-# directories
 CWD=`dirname $0`
 
 BUILD_DIR="${CWD}/gradle_build"
@@ -48,7 +47,7 @@ mkdir -p ${BIN_DIR}
 mkdir -p ${JAVA_DIR}
 
 cp ${UNITY_JAVA_LIB} ${LIBS_DIR}
-cp -r src/net ${JAVA_DIR}
+cp -r src/jd ${JAVA_DIR}
 cp AndroidManifest.xml ${BUILD_DIR}/src/main
 
 ./gradlew clean
@@ -56,7 +55,7 @@ cp AndroidManifest.xml ${BUILD_DIR}/src/main
 cp ${BUILD_DIR}/build/outputs/aar/*.aar ${BIN_DIR}/WebViewPlugins.aar
 
 # install
-DEST_DIR='../../build/Packager/Assets/Plugins/Android'
+DEST_DIR='../../Plugins/Android'
 mkdir -p ${DEST_DIR}
 cp ${BIN_DIR}/WebViewPlugins.aar ${DEST_DIR}/WebViewPlugin.aar
 
