@@ -1,0 +1,9 @@
+{
+    "name": "jd.boivin.unity.webview",
+    "displayName": "WebView",
+    "description": "Display WebView in Unity",
+    "version": "1.0.0",
+    "unity": "2019.3",
+    "license": "MIT",
+    "author": "Jean-Denis Boivin"
+}
