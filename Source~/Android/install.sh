@@ -2,12 +2,8 @@
 
 cd "$(dirname "$0")"
 
-# required command
-JAR_CMD=`which jar`
-
 # directories
 CWD=`dirname $0`
-CWD=`cd $CWD && pwd -P`
 
 BUILD_DIR="${CWD}/gradle_build"
 LIBS_DIR="${BUILD_DIR}/libs"
