@@ -26,7 +26,7 @@ mkdir -p "${DEST_DIR}"
 cp "${BUILD_DIR}/build/outputs/aar/"*.aar "${DEST_DIR}/WebViewPlugin.aar"
 
 # Cleanup
-rm -rf "${BUILD_DIR}"
+rm -rf "${BUILD_DIR}/build"
 
 # Copy meta
 cp *.aar.meta ${DEST_DIR}
