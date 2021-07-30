@@ -357,6 +357,9 @@ static WKProcessPool *_sharedProcessPool;
     if (webView == nil)
         return;
     
+    // Older mac doesn't seems to work? Maybe this could work?
+    //mWebView.loadUrl("javascript:" + URLEncoder.encode(js));
+    
     NSString *jsStr = [NSString stringWithUTF8String: js];
     [webView evaluateJavaScript: jsStr completionHandler: nil];
 }

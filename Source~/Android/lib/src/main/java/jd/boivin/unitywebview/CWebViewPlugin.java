@@ -447,31 +447,31 @@ public class CWebViewPlugin extends Fragment {
             webView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                    webView.loadUrl("about:blank");
+                    /*webView.loadUrl("about:blank");
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
-                    mWebViewPlugin.call("CallOnError", errorCode + "\t" + description + "\t" + failingUrl);
+                    mWebViewPlugin.call("CallOnError", errorCode + "\t" + description + "\t" + failingUrl);*/
                 }
 
                 @Override
                 public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
-                    mWebViewPlugin.call("CallOnHttpError", Integer.toString(errorResponse.getStatusCode()));
+                    //mWebViewPlugin.call("CallOnHttpError", Integer.toString(errorResponse.getStatusCode()));
                 }
 
                 @Override
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
-                    mWebViewPlugin.call("CallOnStarted", url);
+                    //mWebViewPlugin.call("CallOnStarted", url);
                 }
 
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
-                    mWebViewPlugin.call("CallOnLoaded", url);
+                    //mWebViewPlugin.call("CallOnLoaded", url);
                 }
 
                 @Override
@@ -578,7 +578,7 @@ public class CWebViewPlugin extends Fragment {
                             || url.startsWith("https://")
                             || url.startsWith("file://")
                             || url.startsWith("javascript:"))) {
-                        mWebViewPlugin.call("CallOnStarted", url);
+                        //mWebViewPlugin.call("CallOnStarted", url);
                         // Let webview handle the URL
                         return false;
                     }
@@ -651,6 +651,8 @@ public class CWebViewPlugin extends Fragment {
 
             if (transparent) {
                 webView.setBackgroundColor(0x00000000);
+            } else {
+                webView.setBackgroundColor(0xff2A2D40);
             }
 
             if (layout == null || layout.getParent() != a.findViewById(android.R.id.content)) {
