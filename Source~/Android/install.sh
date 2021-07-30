@@ -3,6 +3,7 @@
 cd "$(dirname "$0")"
 
 CWD=`dirname $0`
+CWD=`cd $CWD && pwd -P`
 
 BUILD_DIR="${CWD}/lib"
 
