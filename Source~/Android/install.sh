@@ -42,7 +42,17 @@ export ANDROID_HOME="${OLD_ANDROID_HOME}"
 # Copy build to plugins
 DEST_DIR='../../Plugins/Android'
 mkdir -p "${DEST_DIR}"
+
+ls -la "${BUILD_DIR}/build"
+ls -la "${BUILD_DIR}/build/outputs"
+ls -la "${BUILD_DIR}/build/outputs/aar"
+
+ls -la "${CWD}/build"
+ls -la "${CWD}/build/outputs"
+ls -la "${CWD}/build/outputs/aar"
+
 cp "${BUILD_DIR}/build/outputs/aar/"*.aar "${DEST_DIR}/WebViewPlugin.aar"
+cp "${CWD}/build/outputs/aar/"*.aar "${DEST_DIR}/WebViewPlugin.aar"
 
 # Cleanup
 rm -rf "${BUILD_DIR}/build"
