@@ -1,10 +1,12 @@
 # Unity.WebView
 Display WebView in Unity
 
-This is a fork of [Gree's](https://github.com/gree) [unity-webview](https://github.com/gree/unity-webview)
+This is a fork of [Gree's](https://github.com/gree) [unity-webview](https://github.com/gree/unity-webview), I just re-packaged it for my own convenience and added a few things (like mac standalone player support) 
 
 Support iOS / Android / Mac
 
-This overlay a native webview on top of Unity (not a texture in world space)
+WebView2 support for Windows is also planned (contact me for a POC, it does requires building another app that bundle unity inside at the moment)
 
-You need to build the binary yourself for Android / Mac (`Source~/Mac/install.sh` / `Source~/Android/install.sh --unity UNITY_PATH`)
+This overlay a os-native webview on top of Unity (not a texture in world space and no chromium bundle)
+
+You need to build the binary yourself for Android / Mac (`Source~/Mac/install.sh` / `Source~/Android/install.sh UNITY_PATH`)
