@@ -84,7 +84,7 @@ public class UnityWebViewPostprocessBuild
             changed = (androidManifest.AddMicrophone() || changed);
 #endif
 #if UNITY_5_6_0 || UNITY_5_6_1
-            changed = (androidManifest.SetActivityName("net.gree.unitywebview.CUnityPlayerActivity") || changed);
+            changed = (androidManifest.SetActivityName("jd.boivin.unitywebview.CUnityPlayerActivity") || changed);
 #endif
             if (changed) {
                 androidManifest.Save();
