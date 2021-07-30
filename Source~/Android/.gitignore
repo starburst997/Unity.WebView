@@ -6,3 +6,7 @@ proguard.cfg
 sdk
 gradle_build
 .gradle
+temp
+build
+.idea
+lib/build
