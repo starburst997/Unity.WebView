@@ -9,4 +9,4 @@ WebView2 support for Windows is also planned (contact me for a POC, it does requ
 
 This overlay a os-native webview on top of Unity (not a texture in world space and no chromium bundle)
 
-You need to build the binary yourself for Android / Mac (`Source~/Mac/install.sh` / `Source~/Android/install.sh UNITY_PATH`)
+You need to build the binary yourself for Mac / Android (`Source~/Mac/install.sh` / `Source~/Android/install.sh`)
