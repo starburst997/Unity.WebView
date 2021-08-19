@@ -214,6 +214,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     {
         if ([subview isKindOfClass:[UIScrollView class]] || [subview isMemberOfClass:[UIScrollView class]]) {
             
+            NSLog(@"FOUND SCROLLBAR!!!");
+            
             ((UIScrollView *)subview).delegate = self;
         
             if (@available(iOS 13.0, *)) {
@@ -234,8 +236,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     //scrollView.alwaysBounceVertical = YES;
     //scrollView.contentSize | backgroundColor | superview (loop count parents)
     
-    //NSLog(@"contentSize width %f", scrollView.contentSize.width);
-    //NSLog(@"contentSize height %f", scrollView.contentSize.height);
+    NSLog(@"contentSize width %f", scrollView.contentSize.width);
+    NSLog(@"contentSize height %f", scrollView.contentSize.height);
     
     if (@available(iOS 13.0, *)) {
         UIView *verticalIndicator = [scrollView.subviews lastObject];
