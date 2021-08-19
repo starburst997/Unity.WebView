@@ -188,9 +188,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     }
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.hidden = YES;
-
-    ((WKWebView *)webView).scrollView.delegate = self;
-
+    
     //[webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
 
     [view addSubview:webView];
@@ -200,13 +198,9 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 
 - (void)checkScrollbar
 {
-    NSLog(@"START CHECK SCROLLBAR");
-
     if (webView == nil)
         return;
-
-    NSLog(@"CHECK SCROLLBAR");
-
+    
     [self checkSubViews: ((WKWebView *)webView)];
 }
 
@@ -215,19 +209,25 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     for (UIView *subview in view.subviews)
     {
         if ([subview isKindOfClass:[UIScrollView class]] || [subview isMemberOfClass:[UIScrollView class]]) {
+            UIScrollView *scrollView = (UIScrollView *) subview;
             
-            NSLog(@"FOUND SCROLLBAR!!!");
+            // Sidebar is white, otherwise it is black
+            if (scrollView.frame.size.width < webView.frame.size.width && (int) scrollView.frame.origin.x <= 0) {
+                scrollView.indicatorStyle = [UIColor redColor]; //UIScrollViewIndicatorStyleWhite;
+            } else {
+                scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+            }
             
-            ((UIScrollView *)subview).delegate = self;
-            ((UIScrollView *)subview).indicatorStyle = UIScrollViewIndicatorStyleBlack;
+            // Cannot override 
+            //((UIScrollView *)subview).delegate = self;
         
-            if (@available(iOS 13.0, *)) {
+            /*if (@available(iOS 13.0, *)) {
                 UIView *verticalIndicator = [subview.subviews lastObject];
                 verticalIndicator.backgroundColor = [UIColor blackColor];
             } else {
                 UIImageView *verticalIndicator = [subview.subviews lastObject];
                 verticalIndicator.backgroundColor = [UIColor blackColor];
-            }
+            }*/
         }
         
         [self checkSubViews: subview];
@@ -243,13 +243,13 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     NSLog(@"contentSize width %f", scrollView.contentSize.width);
     NSLog(@"contentSize height %f", scrollView.contentSize.height);
     
-    if (@available(iOS 13.0, *)) {
+    /*if (@available(iOS 13.0, *)) {
         UIView *verticalIndicator = [scrollView.subviews lastObject];
         verticalIndicator.backgroundColor = [UIColor blackColor];
     } else {
         UIImageView *verticalIndicator = [scrollView.subviews lastObject];
         verticalIndicator.backgroundColor = [UIColor blackColor];
-    }
+    }*/
 }
 
 - (void)dispose
@@ -362,7 +362,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
       didReceiveScriptMessage:(WKScriptMessage *)message {
 
     // Log out the message received
-    NSLog(@"Received event %@", message.body);
+    //NSLog(@"Received event %@", message.body);
     UnitySendMessage([gameObjectName UTF8String], "CallFromJS",
                      [[NSString stringWithFormat:@"%@", message.body] UTF8String]);
 
@@ -972,8 +972,6 @@ void _CWebViewPlugin_GoBack(void *instance)
 
 void _CWebViewPlugin_CheckScrollbar(void *instance)
 {
-    NSLog(@"_CWebViewPlugin_CheckScrollbar");
-
     if (instance == NULL)
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
