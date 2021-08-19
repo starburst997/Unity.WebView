@@ -659,6 +659,8 @@ public class WebViewObject : MonoBehaviour
     
     public void CheckScrollbar()
     {
+        Debug.Log($"Unity CheckScrollbar(1)");
+        
 #if UNITY_WEBPLAYER || UNITY_WEBGL
         //TODO: UNSUPPORTED
 #elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -666,6 +668,8 @@ public class WebViewObject : MonoBehaviour
 #elif UNITY_IPHONE
         if (webView == IntPtr.Zero)
             return;
+
+        Debug.Log($"Unity CheckScrollbar(2)");
         _CWebViewPlugin_CheckScrollbar(webView);
 #elif UNITY_ANDROID
         //TODO: UNSUPPORTED

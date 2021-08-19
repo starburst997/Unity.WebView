@@ -972,6 +972,8 @@ void _CWebViewPlugin_GoBack(void *instance)
 
 void _CWebViewPlugin_CheckScrollbar(void *instance)
 {
+    NSLog(@"_CWebViewPlugin_CheckScrollbar");
+
     if (instance == NULL)
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
