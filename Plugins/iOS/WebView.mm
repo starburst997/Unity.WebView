@@ -210,14 +210,14 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 {
     for (UIView *subview in view.subviews)
     {
-        if ([subView isKindOfClass:[UIScrollView class]]) {
-            ((UIScrollView *)subView).delegate = self;
+        if ([subview isKindOfClass:[UIScrollView class]]) {
+            ((UIScrollView *)subview).delegate = self;
         
             if (@available(iOS 13.0, *)) {
-                UIView *verticalIndicator = [subView.subviews lastObject];
+                UIView *verticalIndicator = [subview.subviews lastObject];
                 verticalIndicator.backgroundColor = [UIColor blackColor];
             } else {
-                UIImageView *verticalIndicator = [subView.subviews lastObject];
+                UIImageView *verticalIndicator = [subview.subviews lastObject];
                 verticalIndicator.backgroundColor = [UIColor blackColor];
             }
         }
