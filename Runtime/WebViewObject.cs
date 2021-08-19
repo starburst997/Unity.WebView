@@ -185,6 +185,9 @@ public class WebViewObject : MonoBehaviour
     private static extern bool _CWebViewPlugin_CanGoBack(
         IntPtr instance);
     [DllImport("__Internal")]
+    private static extern bool _CWebViewPlugin_CheckScrollbar(
+        IntPtr instance);
+    [DllImport("__Internal")]
     private static extern bool _CWebViewPlugin_CanGoForward(
         IntPtr instance);
     [DllImport("__Internal")]
@@ -651,6 +654,21 @@ public class WebViewObject : MonoBehaviour
         if (webView == null)
             return;
         webView.Call("GoBack");
+#endif
+    }
+    
+    public void CheckScrollbar()
+    {
+#if UNITY_WEBPLAYER || UNITY_WEBGL
+        //TODO: UNSUPPORTED
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        //TODO: UNSUPPORTED
+#elif UNITY_IPHONE
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_CheckScrollbar(webView);
+#elif UNITY_ANDROID
+        //TODO: UNSUPPORTED
 #endif
     }
 

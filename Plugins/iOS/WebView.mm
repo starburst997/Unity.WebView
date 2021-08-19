@@ -42,6 +42,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 - (void)evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^ __nullable)(__nullable id, NSError * __nullable error))completionHandler;
 @property (nonatomic, readonly) BOOL canGoBack;
 @property (nonatomic, readonly) BOOL canGoForward;
+- (void)checkScrollbar;
 - (void)goBack;
 - (void)goForward;
 - (void)reload;
@@ -89,7 +90,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
 @end
 
-@interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
+@interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, UIScrollViewDelegate>
 {
     UIView <WebViewProtocol> *webView;
     NSString *gameObjectName;
@@ -188,11 +189,58 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.hidden = YES;
 
+    ((WKWebView *)webView).scrollView.delegate = self;
+
     //[webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
 
     [view addSubview:webView];
 
     return self;
+}
+
+- (void)checkScrollbar
+{
+    if (webView == nil)
+        return;
+
+    [self checkSubViews: ((WKWebView *)webView).scrollView];
+}
+
+- (void)checkSubViews: (UIView*) view
+{
+    for (UIView *subview in view.subviews)
+    {
+        if ([subView isKindOfClass:[UIScrollView class]]) {
+            ((UIScrollView *)subView).delegate = self;
+        
+            if (@available(iOS 13.0, *)) {
+                UIView *verticalIndicator = [subView.subviews lastObject];
+                verticalIndicator.backgroundColor = [UIColor blackColor];
+            } else {
+                UIImageView *verticalIndicator = [subView.subviews lastObject];
+                verticalIndicator.backgroundColor = [UIColor blackColor];
+            }
+        }
+        
+        [self checkSubViews: subview];
+    }
+}
+
+- (void) scrollViewDidScroll:(UIScrollView *)scrollView {
+    //scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+    //scrollView.alwaysBounceVertical = YES;
+    //scrollView.contentSize | backgroundColor | superview (loop count parents)
+    
+    //NSLog(@"contentSize width %f", scrollView.contentSize.width);
+    //NSLog(@"contentSize height %f", scrollView.contentSize.height);
+    
+    if (@available(iOS 13.0, *)) {
+        UIView *verticalIndicator = [scrollView.subviews lastObject];
+        verticalIndicator.backgroundColor = [UIColor blackColor];
+    } else {
+        UIImageView *verticalIndicator = [scrollView.subviews lastObject];
+        verticalIndicator.backgroundColor = [UIColor blackColor];
+    }
 }
 
 - (void)dispose
@@ -772,6 +820,7 @@ extern "C" {
     BOOL _CWebViewPlugin_CanGoForward(void *instance);
     void _CWebViewPlugin_GoBack(void *instance);
     void _CWebViewPlugin_GoForward(void *instance);
+    void _CWebViewPlugin_CheckScrollbar(void *instance);
     void _CWebViewPlugin_Reload(void *instance);
     void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue);
     void _CWebViewPlugin_RemoveCustomHeader(void *instance, const char *headerKey);
@@ -910,6 +959,14 @@ void _CWebViewPlugin_GoBack(void *instance)
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin goBack];
+}
+
+void _CWebViewPlugin_CheckScrollbar(void *instance)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin checkScrollbar];
 }
 
 void _CWebViewPlugin_GoForward(void *instance)
