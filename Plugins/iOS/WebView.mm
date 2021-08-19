@@ -203,14 +203,17 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     if (webView == nil)
         return;
 
-    [self checkSubViews: ((WKWebView *)webView).scrollView];
+    NSLog(@"CHECK SCROLLBAR");
+
+    [self checkSubViews: ((WKWebView *)webView)];
 }
 
 - (void)checkSubViews: (UIView*) view
 {
     for (UIView *subview in view.subviews)
     {
-        if ([subview isKindOfClass:[UIScrollView class]]) {
+        if ([subview isKindOfClass:[UIScrollView class]] || [subview isMemberOfClass:[UIScrollView class]]) {
+            
             ((UIScrollView *)subview).delegate = self;
         
             if (@available(iOS 13.0, *)) {
