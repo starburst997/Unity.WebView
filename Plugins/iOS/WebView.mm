@@ -213,7 +213,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
             
             // Sidebar is white, otherwise it is black
             if (scrollView.frame.size.width < webView.frame.size.width && (int) scrollView.frame.origin.x <= 0) {
-                scrollView.indicatorStyle = [UIColor redColor]; //UIScrollViewIndicatorStyleWhite;
+                scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
             } else {
                 scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             }
