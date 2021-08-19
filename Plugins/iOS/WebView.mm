@@ -200,6 +200,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 
 - (void)checkScrollbar
 {
+    NSLog(@"START CHECK SCROLLBAR");
+
     if (webView == nil)
         return;
 
@@ -217,6 +219,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
             NSLog(@"FOUND SCROLLBAR!!!");
             
             ((UIScrollView *)subview).delegate = self;
+            ((UIScrollView *)subview).indicatorStyle = UIScrollViewIndicatorStyleBlack;
         
             if (@available(iOS 13.0, *)) {
                 UIView *verticalIndicator = [subview.subviews lastObject];
@@ -232,7 +235,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 }
 
 - (void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    //scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+    scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
+    
     //scrollView.alwaysBounceVertical = YES;
     //scrollView.contentSize | backgroundColor | superview (loop count parents)
     
