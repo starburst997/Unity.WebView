@@ -361,6 +361,11 @@ public class WebViewMac : MonoBehaviour
 #endif
     }
 
+    public void CheckScrollbar()
+    {
+        // TODO: Not implemented
+    }
+
     public void Reload()
     {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
