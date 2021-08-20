@@ -152,8 +152,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
             configuration.limitsNavigationsToAppBoundDomains = YES;
         }
         
-        // TODO: Test remove
-        configuration.suppressesIncrementalRendering = !false;
+        configuration.suppressesIncrementalRendering = false;
         
         webView = [[WKWebView alloc] initWithFrame:view.frame configuration:configuration];
         
