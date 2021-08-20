@@ -177,7 +177,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         webView = nil;
         return self;
     }
-    if (transparent) {
+    if (transparent) { // TODO: Try transparent to prevent "flashes"?
         webView.opaque = NO;
         webView.backgroundColor = [UIColor clearColor];
     } else {
@@ -186,10 +186,10 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
                                                    blue:0.2509804
                                                   alpha:1.0];
         
-        webView.scrollView.backgroundColor = [UIColor colorWithRed:0.1647059
-                                                  green:0.1764706
-                                                   blue:0.2509804
-                                                  alpha:1.0];
+        ((WKWebView *)webView).scrollView.backgroundColor = [UIColor colorWithRed:0.1647059
+                                                                     green:0.1764706
+                                                                      blue:0.2509804
+                                                                     alpha:1.0];
     }
     
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
