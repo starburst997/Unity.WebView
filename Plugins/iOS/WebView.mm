@@ -185,7 +185,13 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
                                                   green:0.1764706
                                                    blue:0.2509804
                                                   alpha:1.0];
+        
+        webView.scrollView.backgroundColor = [UIColor colorWithRed:0.1647059
+                                                  green:0.1764706
+                                                   blue:0.2509804
+                                                  alpha:1.0];
     }
+    
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.hidden = YES;
     
