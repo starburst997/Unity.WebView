@@ -564,6 +564,12 @@ public class CWebViewPlugin extends Fragment {
                         pass = false;
                     }
                     if (!pass) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        PackageManager pm = a.getPackageManager();
+                        List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
+                        if (apps.size() > 0) {
+                            view.getContext().startActivity(intent);
+                        }
                         return true;
                     }
                     if (url.startsWith("unity:")) {

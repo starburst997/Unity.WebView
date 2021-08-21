@@ -173,6 +173,7 @@ static WKProcessPool *_sharedProcessPool;
     
     if (!pass) {
         decisionHandler(WKNavigationActionPolicyCancel);
+        [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: url]];
         return;
     }
     

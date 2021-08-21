@@ -454,6 +454,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     }
     if (!pass) {
         decisionHandler(WKNavigationActionPolicyCancel);
+        [[UIApplication sharedApplication] openURL:nsurl];
         return;
     }
     if ([url rangeOfString:@"//itunes.apple.com/"].location != NSNotFound) {
