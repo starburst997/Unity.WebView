@@ -365,6 +365,11 @@ public class WebViewMac : MonoBehaviour
     {
         // TODO: Not implemented
     }
+    
+    public void OpaqueBackground()
+    {
+        // TODO: Not implemented
+    }
 
     public void Reload()
     {
