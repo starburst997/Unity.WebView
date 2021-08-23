@@ -452,9 +452,14 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     } else if (denyRegex != nil && [denyRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
          pass = NO;
     }
+    
+    NSLog(@"Link: %@ / %d", url, pass);
+    
     if (!pass) {
-        decisionHandler(WKNavigationActionPolicyCancel);
+        NSLog(@"Open in Safari");
+    
         [[UIApplication sharedApplication] openURL:nsurl];
+        decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
     if ([url rangeOfString:@"//itunes.apple.com/"].location != NSNotFound) {
