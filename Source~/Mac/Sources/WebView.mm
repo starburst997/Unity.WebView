@@ -152,6 +152,19 @@ static WKProcessPool *_sharedProcessPool;
 
 - (void) webView: (WKWebView *) webView didFailNavigation: (WKNavigation *) navigation withError: (NSError *) error
 {
+    NSURL *nsurl = [error.userInfo objectForKey:NSURLErrorFailingURLErrorKey];
+    NSString *url = [nsurl absoluteString];
+    BOOL pass = allowRegex == nil;
+    if (allowRegex != nil && [allowRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
+         pass = YES;
+    } else if (denyRegex != nil && [denyRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
+         pass = NO;
+    }
+    
+    if (!pass) {
+        [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: url]];
+    }
+
     [self addMessage:[NSString stringWithFormat:@"E%@",[error description]]];
 }
 
@@ -164,7 +177,7 @@ static WKProcessPool *_sharedProcessPool;
     
     NSString *url = [[navigationAction.request URL] absoluteString];
     
-    BOOL pass = YES;
+    BOOL pass = allowRegex == nil;
     if (allowRegex != nil && [allowRegex firstMatchInString: url options:0 range: NSMakeRange(0, url.length)]) {
          pass = YES;
     } else if (denyRegex != nil && [denyRegex firstMatchInString: url options:0 range: NSMakeRange(0, url.length)]) {
