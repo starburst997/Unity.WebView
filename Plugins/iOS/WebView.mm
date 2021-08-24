@@ -91,7 +91,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
 @end
 
-@interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler, UIScrollViewDelegate>
+@interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
 {
     UIView <WebViewProtocol> *webView;
     NSString *gameObjectName;
@@ -158,7 +158,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         webView = [[WKWebView alloc] initWithFrame:view.frame configuration:configuration];
         
         webView.UIDelegate = self;
-        //webView.navigationDelegate = self;
+        webView.navigationDelegate = self;
         
         // TODO: Add params
         ((WKWebView *)webView).allowsLinkPreview = NO;
@@ -257,24 +257,6 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         
         [self checkSubViews: subview];
     }
-}
-
-- (void) scrollViewDidScroll:(UIScrollView *)scrollView {
-    scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-    
-    //scrollView.alwaysBounceVertical = YES;
-    //scrollView.contentSize | backgroundColor | superview (loop count parents)
-    
-    NSLog(@"contentSize width %f", scrollView.contentSize.width);
-    NSLog(@"contentSize height %f", scrollView.contentSize.height);
-    
-    /*if (@available(iOS 13.0, *)) {
-        UIView *verticalIndicator = [scrollView.subviews lastObject];
-        verticalIndicator.backgroundColor = [UIColor blackColor];
-    } else {
-        UIImageView *verticalIndicator = [scrollView.subviews lastObject];
-        verticalIndicator.backgroundColor = [UIColor blackColor];
-    }*/
 }
 
 - (void)dispose
