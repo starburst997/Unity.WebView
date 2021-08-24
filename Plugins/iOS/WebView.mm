@@ -738,7 +738,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         return;
     NSString *urlStr = [NSString stringWithUTF8String:url];
     NSURL *nsurl = [NSURL URLWithString:urlStr];
-    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
+    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
     [webView load:request];
 }
 
