@@ -429,9 +429,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
     NSLog(@"didFailNavigation");
-
-    // Might be needed for app bound domains?
-    /*NSURL *nsurl = [navigationAction.request URL];
+    
+    NSURL *nsurl = [error.userInfo objectForKey:NSURLErrorFailingURLErrorKey];
     NSString *url = [nsurl absoluteString];
     BOOL pass = allowRegex == nil;
     if (allowRegex != nil && [allowRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
@@ -443,7 +442,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     if (!pass) {
         NSLog(@"Open in Safari then");
         [[UIApplication sharedApplication] openURL:nsurl];
-    }*/
+    }
 
     UnitySendMessage([gameObjectName UTF8String], "CallOnError", [[error description] UTF8String]);
 }
