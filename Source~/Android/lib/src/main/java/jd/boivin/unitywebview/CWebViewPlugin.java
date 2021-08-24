@@ -557,7 +557,7 @@ public class CWebViewPlugin extends Fragment {
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
-                    boolean pass = true;
+                    boolean pass = mAllowRegex == null;
                     if (mAllowRegex != null && mAllowRegex.matcher(url).find()) {
                         pass = true;
                     } else if (mDenyRegex != null && mDenyRegex.matcher(url).find()) {
