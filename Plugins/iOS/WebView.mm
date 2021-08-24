@@ -403,29 +403,11 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    NSLog(@"didFailProvisionalNavigation");
-    
     UnitySendMessage([gameObjectName UTF8String], "CallOnError", [[error description] UTF8String]);
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error
 {
-    NSLog(@"didFailNavigation");
-    
-    NSURL *nsurl = [error.userInfo objectForKey:NSURLErrorFailingURLErrorKey];
-    NSString *url = [nsurl absoluteString];
-    BOOL pass = allowRegex == nil;
-    if (allowRegex != nil && [allowRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
-         pass = YES;
-    } else if (denyRegex != nil && [denyRegex firstMatchInString:url options:0 range:NSMakeRange(0, url.length)]) {
-         pass = NO;
-    }
-    
-    if (!pass) {
-        NSLog(@"Open in Safari then");
-        [[UIApplication sharedApplication] openURL:nsurl];
-    }
-
     UnitySendMessage([gameObjectName UTF8String], "CallOnError", [[error description] UTF8String]);
 }
 
@@ -453,11 +435,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
          pass = NO;
     }
     
-    NSLog(@"Link: %@ / %d", url, pass);
-    
     if (!pass) {
-        NSLog(@"Open in Safari");
-    
         [[UIApplication sharedApplication] openURL:nsurl];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
