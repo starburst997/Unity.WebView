@@ -686,7 +686,9 @@ public class WebViewObject : MonoBehaviour
             return;
         _CWebViewPlugin_OpaqueBackground(webView);
 #elif UNITY_ANDROID
-        //TODO: UNSUPPORTED
+        if (webView == null)
+            return;
+        webView.Call("OpaqueBackground");
 #endif
     }
 

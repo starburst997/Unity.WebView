@@ -878,6 +878,16 @@ public class CWebViewPlugin extends Fragment {
             mWebView.goForward();
         }});
     }
+    
+    public void OpaqueBackground() {
+        final Activity a = UnityPlayer.currentActivity;
+        a.runOnUiThread(new Runnable() {public void run() {
+            if (mWebView == null) {
+                return;
+            }
+            mWebView.setBackgroundColor(0xffffffff);
+        }});
+    }
 
     public void Reload() {
         final Activity a = UnityPlayer.currentActivity;
