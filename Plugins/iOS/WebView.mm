@@ -162,7 +162,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         
         // TODO: Add params
         ((WKWebView *)webView).allowsLinkPreview = NO;
-        ((WKWebView *)webView).allowsBackForwardNavigationGestures = YES; // Not sure why, the first time I got white page but now it is OK (I did add App Bounds Domains?)
+        ((WKWebView *)webView).allowsBackForwardNavigationGestures = NO; // Not sure why, the first time I got white page but now it is OK (I did add App Bounds Domains?)
         
         if (ua != NULL && strcmp(ua, "") != 0) {
             ((WKWebView *)webView).customUserAgent = [[NSString alloc] initWithUTF8String:ua];
