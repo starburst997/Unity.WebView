@@ -436,7 +436,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     }
     
     if (!pass) {
-        if (action.targetFrame.mainFrame) {
+        if (navigationAction.targetFrame.mainFrame) {
             [[UIApplication sharedApplication] openURL:nsurl];
             decisionHandler(WKNavigationActionPolicyCancel);
         } else {
