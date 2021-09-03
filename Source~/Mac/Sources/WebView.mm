@@ -185,8 +185,12 @@ static WKProcessPool *_sharedProcessPool;
     }
     
     if (!pass) {
-        decisionHandler(WKNavigationActionPolicyCancel);
-        [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: url]];
+        if (action.targetFrame.mainFrame) {
+            decisionHandler(WKNavigationActionPolicyCancel);
+            [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: url]];
+        } else {
+            decisionHandler(WKNavigationActionPolicyAllow);
+        }
         return;
     }
     

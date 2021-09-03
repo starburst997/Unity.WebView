@@ -554,7 +554,9 @@ public class CWebViewPlugin extends Fragment {
                 }
 
                 @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                    String url = request.getUrl().toString();
+                
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
                     boolean pass = mAllowRegex == null;
@@ -564,13 +566,19 @@ public class CWebViewPlugin extends Fragment {
                         pass = false;
                     }
                     if (!pass) {
-                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        PackageManager pm = a.getPackageManager();
-                        List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
-                        if (apps.size() > 0) {
-                            view.getContext().startActivity(intent);
+                        if (request.isForMainFrame()) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            PackageManager pm = a.getPackageManager();
+                            List<ResolveInfo> apps = pm.queryIntentActivities(intent, 0);
+                            if (apps.size() > 0) {
+                                view.getContext().startActivity(intent);
+                            }
+                            
+                            return true;
+                        } else {
+                            
+                            return false;
                         }
-                        return true;
                     }
                     if (url.startsWith("unity:")) {
                         String message = url.substring(6);
