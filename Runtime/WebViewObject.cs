@@ -39,6 +39,7 @@ public class WebViewObject : MonoBehaviour
 {
     Callback onJS;
     Callback onError;
+    Callback onTerminate;
     Callback onHttpError;
     Callback onStarted;
     Callback onLoaded;
@@ -201,6 +202,8 @@ public class WebViewObject : MonoBehaviour
         IntPtr instance);
     [DllImport("__Internal")]
     private static extern void _CWebViewPlugin_Reload(
+        IntPtr instance);
+    private static extern void _CWebViewPlugin_ReloadURL(
         IntPtr instance);
     [DllImport("__Internal")]
     private static extern void   _CWebViewPlugin_AddCustomHeader(IntPtr instance, string headerKey, string headerValue);
@@ -725,6 +728,21 @@ public class WebViewObject : MonoBehaviour
         webView.Call("Reload");
 #endif
     }
+    
+    public void ReloadURL()
+    {
+#if UNITY_WEBPLAYER || UNITY_WEBGL
+        //TODO: UNSUPPORTED
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        //TODO: UNSUPPORTED
+#elif UNITY_IPHONE
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_ReloadURL(webView);
+#elif UNITY_ANDROID
+        //TODO: UNSUPPORTED
+#endif
+    }
 
     public void CallOnError(string error)
     {
@@ -732,6 +750,19 @@ public class WebViewObject : MonoBehaviour
         {
             onError(error);
         }
+    }
+    
+    public void CallOnTerminate(string error)
+    {
+        if (onTerminate != null)
+        {
+            onTerminate(error);
+        }
+    }
+    
+    public void SetOnTerminate(Callback handler)
+    {
+        onTerminate = handler;
     }
 
     public void CallOnHttpError(string error)

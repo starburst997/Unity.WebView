@@ -47,6 +47,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 - (void)goBack;
 - (void)goForward;
 - (void)reload;
+- (void)reloadURL;
 - (void)stopLoading;
 - (void)setScrollBounce:(BOOL)enable;
 @end
@@ -424,8 +425,14 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
+    NSLog(@"Terminate");
+    UnitySendMessage([gameObjectName UTF8String], "CallOnTerminate", "");
+
     if (webView == nil || currentURL == nil)
         return;
+    
+    NSLog(@"Attempting Reload");
+    
     NSURL *nsurl = [NSURL URLWithString:currentURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
     [webView load:request];
@@ -789,6 +796,16 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     [webView reload];
 }
 
+- (void)reloadURL
+{
+    if (webView == nil || currentURL == nil)
+        return;
+    
+    NSURL *nsurl = [NSURL URLWithString:currentURL];
+    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
+    [webView load:request];
+}
+
 - (void)addCustomRequestHeader:(const char *)headerKey value:(const char *)headerValue
 {
     NSString *keyString = [NSString stringWithUTF8String:headerKey];
@@ -864,6 +881,7 @@ extern "C" {
     void _CWebViewPlugin_CheckScrollbar(void *instance);
     void _CWebViewPlugin_OpaqueBackground(void *instance);
     void _CWebViewPlugin_Reload(void *instance);
+    void _CWebViewPlugin_ReloadURL(void *instance);
     void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue);
     void _CWebViewPlugin_RemoveCustomHeader(void *instance, const char *headerKey);
     void _CWebViewPlugin_ClearCustomHeader(void *instance);
@@ -1033,6 +1051,14 @@ void _CWebViewPlugin_Reload(void *instance)
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin reload];
+}
+
+void _CWebViewPlugin_ReloadURL(void *instance)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin reloadURL];
 }
 
 void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue)

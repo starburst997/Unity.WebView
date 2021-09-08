@@ -31,6 +31,7 @@ public class WebViewMac : MonoBehaviour
 {
     Callback onJS;
     Callback onError;
+    Callback onTerminate;
     Callback onHttpError;
     Callback onStarted;
     Callback onLoaded;
@@ -94,6 +95,8 @@ public class WebViewMac : MonoBehaviour
     private static extern void _CWebViewPlugin_GoForward(IntPtr instance);
     [DllImport("WebView")]
     private static extern void _CWebViewPlugin_Reload(IntPtr instance);
+    [DllImport("WebView")]
+    private static extern void _CWebViewPlugin_ReloadURL(IntPtr instance);
     [DllImport("WebView")]
     private static extern void _CWebViewPlugin_AddCustomHeader(IntPtr instance, string headerKey, string headerValue);
     [DllImport("WebView")]
@@ -379,7 +382,29 @@ public class WebViewMac : MonoBehaviour
         _CWebViewPlugin_Reload(webView);
 #endif
     }
+    
+    public void ReloadURL()
+    {
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_ReloadURL(webView);
+#endif
+    }
 
+    public void CallOnTerminate(string error)
+    {
+        if (onTerminate != null)
+        {
+            onTerminate(error);
+        }
+    }
+    
+    public void SetOnTerminate(Callback handler)
+    {
+        onTerminate = handler;
+    }
+    
     public void CallOnError(string error)
     {
         if (onError != null)
