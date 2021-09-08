@@ -190,12 +190,12 @@ static WKProcessPool *_sharedProcessPool;
 {
     UnitySendMessage([gameObjectName UTF8String], "CallOnTerminate", "");
 
-    if (webView == nil || currentURL == nil)
+    /*if (webView == nil || currentURL == nil)
         return;
     
     NSURL *nsurl = [NSURL URLWithString:currentURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
-    [webView load:request];
+    [webView load:request];*/
 }
 
 - (void) webView:(WKWebView *) wkWebView decidePolicyForNavigationAction: (WKNavigationAction *) navigationAction decisionHandler: (void (^)(WKNavigationActionPolicy)) decisionHandler
