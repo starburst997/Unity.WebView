@@ -245,6 +245,20 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     webView.opaque = NO;
 }
 
+- (BOOL)color:(UIColor *)color1
+    isEqualToColor:(UIColor *)color2
+    withTolerance:(CGFloat)tolerance {
+
+    CGFloat r1, g1, b1, a1, r2, g2, b2, a2;
+    [color1 getRed:&r1 green:&g1 blue:&b1 alpha:&a1];
+    [color2 getRed:&r2 green:&g2 blue:&b2 alpha:&a2];
+    return
+        fabs(r1 - r2) <= tolerance &&
+        fabs(g1 - g2) <= tolerance &&
+        fabs(b1 - b2) <= tolerance &&
+        fabs(a1 - a2) <= tolerance;
+}
+
 - (void)checkSubViews: (UIView*) view
 {
     for (UIView *subview in view.subviews)
@@ -254,10 +268,11 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
             
             // Check background color to choose scrollbar color (black on white / transparent background)
             // White on everything else
-            if ([scrollView.backgroundColor isEqual: [UIColor whiteColor]] || 
-                [scrollView.backgroundColor isEqual: [UIColor clearColor]] ||
-                [scrollView.backgroundColor isEqual: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0]] ||
-                [scrollView.backgroundColor isEqual: [UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0]])
+            if ([self color:scrollView.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:0.1] ||
+                [self color:scrollView.backgroundColor isEqualToColor:[UIColor clearColor] withTolerance:0.1] ||
+                [self color:scrollView.backgroundColor isEqualToColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0] withTolerance:0.1] ||
+                [self color:scrollView.backgroundColor isEqualToColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0] withTolerance:0.1] ||
+                [self color:scrollView.backgroundColor isEqualToColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.0] withTolerance:0.1])
             {
                 scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             } else {
