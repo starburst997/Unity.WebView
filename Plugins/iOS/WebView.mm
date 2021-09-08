@@ -268,7 +268,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
             
             // Check background color to choose scrollbar color (black on white / transparent background)
             // White on everything else
-            if ([self color:scrollView.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:0.1] ||
+            /*if ([self color:scrollView.backgroundColor isEqualToColor:[UIColor whiteColor] withTolerance:0.1] ||
                 [self color:scrollView.backgroundColor isEqualToColor:[UIColor clearColor] withTolerance:0.1] ||
                 [self color:scrollView.backgroundColor isEqualToColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:1.0] withTolerance:0.1] ||
                 [self color:scrollView.backgroundColor isEqualToColor:[UIColor colorWithRed:1.0 green:1.0 blue:1.0 alpha:0.0] withTolerance:0.1] ||
@@ -277,14 +277,14 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
                 scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
             } else {
                 scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-            }
+            }*/
             
             // Sidebar is white, otherwise it is black
-            /*if (scrollView.contentSize.width < webView.frame.size.width && (int) scrollView.frame.origin.x <= 0) {
+            if (scrollView.contentSize.width < webView.frame.size.width /*&& (int) scrollView.frame.origin.x <= 0*/) {
                 scrollView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
             } else {
                 scrollView.indicatorStyle = UIScrollViewIndicatorStyleBlack;
-            }*/
+            }
             
             // Cannot override 
             //((UIScrollView *)subview).delegate = self;
