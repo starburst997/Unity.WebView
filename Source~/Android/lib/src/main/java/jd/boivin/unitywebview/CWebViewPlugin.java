@@ -500,7 +500,10 @@ public class CWebViewPlugin extends Fragment {
                         
                         // Re-create WebView
                         Init(mGameObject, mTransparent, mZoom, mAndroidForceDarkMode, mUA);
-                        LoadURL(mURL);
+                        //LoadURL(mURL);
+                        
+                        // Tell unity
+                        mWebViewPlugin.call("CallOnTerminate", "");
                     }
                 }
 
@@ -955,6 +958,16 @@ public class CWebViewPlugin extends Fragment {
             mWebView.setBackgroundColor(0xffffffff);
         }});
     }
+    
+    public void TransparentBackground() {
+        final Activity a = UnityPlayer.currentActivity;
+        a.runOnUiThread(new Runnable() {public void run() {
+            if (mWebView == null) {
+                return;
+            }
+            mWebView.setBackgroundColor(0x00000000);
+        }});
+    }
 
     public void Reload() {
         final Activity a = UnityPlayer.currentActivity;
@@ -963,6 +976,16 @@ public class CWebViewPlugin extends Fragment {
                 return;
             }
             mWebView.reload();
+        }});
+    }
+    
+    public void ReloadURL() {
+        final Activity a = UnityPlayer.currentActivity;
+        a.runOnUiThread(new Runnable() {public void run() {
+            if (mWebView == null) {
+                return;
+            }
+            mWebView.loadUrl(mURL);
         }});
     }
 

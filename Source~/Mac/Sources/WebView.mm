@@ -107,6 +107,22 @@ static WKProcessPool *_sharedProcessPool;
     return self;
 }
 
+- (void)opaqueBackground
+{
+    if (webView == nil)
+        return;
+    
+    [webView setValue:@YES forKey:@"drawsBackground"];
+}
+
+- (void)transparentBackground
+{
+    if (webView == nil)
+        return;
+        
+    [webView setValue:@NO forKey:@"drawsBackground"]; 
+}
+
 - (void) dispose
 {
     @synchronized(self) {
@@ -522,6 +538,8 @@ extern "C" {
     void _CWebViewPlugin_GoForward(void *instance);
     void _CWebViewPlugin_Reload(void *instance);
     void _CWebViewPlugin_ReloadURL(void *instance);
+    void _CWebViewPlugin_OpaqueBackground(void *instance);
+    void _CWebViewPlugin_TransparentBackground(void *instance);
     void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue);
     void _CWebViewPlugin_RemoveCustomHeader(void *instance, const char *headerKey);
     void _CWebViewPlugin_ClearCustomHeader(void *instance);
@@ -642,6 +660,18 @@ void _CWebViewPlugin_ReloadURL(void *instance)
 {
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
     [webViewPlugin reloadURL];
+}
+
+void _CWebViewPlugin_OpaqueBackground(void *instance)
+{
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
+    [webViewPlugin opaqueBackground];
+}
+
+void _CWebViewPlugin_TransparentBackground(void *instance)
+{
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
+    [webViewPlugin transparentBackground];
 }
 
 void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue)

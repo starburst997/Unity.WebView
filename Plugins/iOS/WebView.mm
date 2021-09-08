@@ -44,6 +44,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 @property (nonatomic, readonly) BOOL canGoForward;
 - (void)checkScrollbar;
 - (void)opaqueBackground;
+- (void)transparentBackground;
 - (void)goBack;
 - (void)goForward;
 - (void)reload;
@@ -230,6 +231,18 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
                                                                  alpha:1.0];
                                                                  
     webView.opaque = YES;
+}
+
+- (void)transparentBackground
+{
+    if (webView == nil)
+        return;
+    
+    webView.backgroundColor = [UIColor clearColor];
+    
+    ((WKWebView *)webView).scrollView.backgroundColor = [UIColor clearColor];
+                                                                 
+    webView.opaque = NO;
 }
 
 - (void)checkSubViews: (UIView*) view
@@ -427,15 +440,15 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 {
     NSLog(@"Terminate");
     UnitySendMessage([gameObjectName UTF8String], "CallOnTerminate", "");
-
-    if (webView == nil || currentURL == nil)
+    
+    /*if (webView == nil || currentURL == nil)
         return;
     
     NSLog(@"Attempting Reload");
     
     NSURL *nsurl = [NSURL URLWithString:currentURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
-    [webView load:request];
+    [webView load:request];*/
 }
 
 - (void)webView:(WKWebView *)wkWebView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
@@ -880,6 +893,7 @@ extern "C" {
     void _CWebViewPlugin_GoForward(void *instance);
     void _CWebViewPlugin_CheckScrollbar(void *instance);
     void _CWebViewPlugin_OpaqueBackground(void *instance);
+    void _CWebViewPlugin_TransparentBackground(void *instance);
     void _CWebViewPlugin_Reload(void *instance);
     void _CWebViewPlugin_ReloadURL(void *instance);
     void _CWebViewPlugin_AddCustomHeader(void *instance, const char *headerKey, const char *headerValue);
@@ -1035,6 +1049,14 @@ void _CWebViewPlugin_OpaqueBackground(void *instance)
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin opaqueBackground];
+}
+
+void _CWebViewPlugin_TransparentBackground(void *instance)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin transparentBackground];
 }
 
 void _CWebViewPlugin_GoForward(void *instance)

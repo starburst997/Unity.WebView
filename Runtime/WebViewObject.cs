@@ -192,6 +192,9 @@ public class WebViewObject : MonoBehaviour
     private static extern bool _CWebViewPlugin_OpaqueBackground(
         IntPtr instance);
     [DllImport("__Internal")]
+    private static extern bool _CWebViewPlugin_TransparentBackground(
+        IntPtr instance);
+    [DllImport("__Internal")]
     private static extern bool _CWebViewPlugin_CanGoForward(
         IntPtr instance);
     [DllImport("__Internal")]
@@ -203,6 +206,7 @@ public class WebViewObject : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void _CWebViewPlugin_Reload(
         IntPtr instance);
+    [DllImport("__Internal")]
     private static extern void _CWebViewPlugin_ReloadURL(
         IntPtr instance);
     [DllImport("__Internal")]
@@ -694,6 +698,23 @@ public class WebViewObject : MonoBehaviour
         webView.Call("OpaqueBackground");
 #endif
     }
+    
+    public void TransparentBackground()
+    {
+#if UNITY_WEBPLAYER || UNITY_WEBGL
+        //TODO: UNSUPPORTED
+#elif UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN || UNITY_EDITOR_LINUX || UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        //TODO: UNSUPPORTED
+#elif UNITY_IPHONE
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_TransparentBackground(webView);
+#elif UNITY_ANDROID
+        if (webView == null)
+            return;
+        webView.Call("TransparentBackground");
+#endif
+    }
 
     public void GoForward()
     {
@@ -740,7 +761,9 @@ public class WebViewObject : MonoBehaviour
             return;
         _CWebViewPlugin_ReloadURL(webView);
 #elif UNITY_ANDROID
-        //TODO: UNSUPPORTED
+        if (webView == null)
+            return;
+        webView.Call("ReloadURL");
 #endif
     }
 

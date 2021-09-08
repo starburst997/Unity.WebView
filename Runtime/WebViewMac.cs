@@ -98,6 +98,10 @@ public class WebViewMac : MonoBehaviour
     [DllImport("WebView")]
     private static extern void _CWebViewPlugin_ReloadURL(IntPtr instance);
     [DllImport("WebView")]
+    private static extern void _CWebViewPlugin_OpaqueBackground(IntPtr instance);
+    [DllImport("WebView")]
+    private static extern void _CWebViewPlugin_TransparentBackground(IntPtr instance);
+    [DllImport("WebView")]
     private static extern void _CWebViewPlugin_AddCustomHeader(IntPtr instance, string headerKey, string headerValue);
     [DllImport("WebView")]
     private static extern string _CWebViewPlugin_GetCustomHeaderValue(IntPtr instance, string headerKey);
@@ -371,7 +375,20 @@ public class WebViewMac : MonoBehaviour
     
     public void OpaqueBackground()
     {
-        // TODO: Not implemented
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_OpaqueBackground(webView);
+#endif
+    }
+    
+    public void TransparentBackground()
+    {
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_TransparentBackground(webView);
+#endif
     }
 
     public void Reload()
