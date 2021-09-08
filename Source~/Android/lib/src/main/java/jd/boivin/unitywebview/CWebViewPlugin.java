@@ -651,6 +651,7 @@ public class CWebViewPlugin extends Fragment {
                         
                         if (request.isForMainFrame()) {
                             mURL = url;
+                            mWebViewPlugin.call("CallOnURLChange", url);
                         }
                         
                         return false;
@@ -895,6 +896,7 @@ public class CWebViewPlugin extends Fragment {
             }
             
             mURL = url;
+            mWebViewPlugin.call("CallOnURLChange", url);
             
             if (mCustomHeaders != null && !mCustomHeaders.isEmpty()) {
                 mWebView.loadUrl(url, mCustomHeaders);

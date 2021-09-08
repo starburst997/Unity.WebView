@@ -40,6 +40,7 @@ public class WebViewObject : MonoBehaviour
     Callback onJS;
     Callback onError;
     Callback onTerminate;
+    Callback onURLChange;
     Callback onHttpError;
     Callback onStarted;
     Callback onLoaded;
@@ -781,6 +782,19 @@ public class WebViewObject : MonoBehaviour
         {
             onTerminate(error);
         }
+    }
+    
+    public void CallOnURLChange(string url)
+    {
+        if (onURLChange != null)
+        {
+            onURLChange(url);
+        }
+    }
+    
+    public void SetOnURLChange(Callback handler)
+    {
+        onURLChange = handler;
     }
     
     public void SetOnTerminate(Callback handler)

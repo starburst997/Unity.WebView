@@ -32,6 +32,7 @@ public class WebViewMac : MonoBehaviour
     Callback onJS;
     Callback onError;
     Callback onTerminate;
+    Callback onURLChange;
     Callback onHttpError;
     Callback onStarted;
     Callback onLoaded;
@@ -417,9 +418,22 @@ public class WebViewMac : MonoBehaviour
         }
     }
     
+    public void CallOnURLChange(string url)
+    {
+        if (onURLChange != null)
+        {
+            onURLChange(url);
+        }
+    }
+    
     public void SetOnTerminate(Callback handler)
     {
         onTerminate = handler;
+    }
+    
+    public void SetOnURLChange(Callback handler)
+    {
+        onURLChange = handler;
     }
     
     public void CallOnError(string error)
@@ -556,6 +570,12 @@ public class WebViewMac : MonoBehaviour
                     break;
                 case 'H':
                     CallOnHooked(s.Substring(1));
+                    break;
+                case 'U':
+                    CallOnURLChange(s.Substring(1));
+                    break;
+                case 'T':
+                    CallOnTerminate("");
                     break;
             }
         }

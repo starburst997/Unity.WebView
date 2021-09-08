@@ -188,7 +188,7 @@ static WKProcessPool *_sharedProcessPool;
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
 {
-    UnitySendMessage([gameObjectName UTF8String], "CallOnTerminate", "");
+    [self addMessage:[NSString stringWithFormat: @"T%@", @""]];
 
     /*if (webView == nil || currentURL == nil)
         return;
@@ -259,6 +259,7 @@ static WKProcessPool *_sharedProcessPool;
     } else {
         if (navigationAction.targetFrame.mainFrame) {
             currentURL = url;
+            [self addMessage:[NSString stringWithFormat: @"U%@", url]];
         }
     
         //[self addMessage:[NSString stringWithFormat: @"S%@", url]];
@@ -383,6 +384,8 @@ static WKProcessPool *_sharedProcessPool;
     
     NSString *urlStr = [NSString stringWithUTF8String: url];
     currentURL = urlStr;
+    
+    [self addMessage:[NSString stringWithFormat: @"U%@", urlStr]];
     
     NSURL *nsurl = [NSURL URLWithString: urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL: nsurl];

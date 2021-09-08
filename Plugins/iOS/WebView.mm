@@ -528,6 +528,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     
     if (navigationAction.targetFrame.mainFrame) {
         currentURL = url;
+        UnitySendMessage([gameObjectName UTF8String], "CallOnURLChange", [url UTF8String]);
     }
     
     //UnitySendMessage([gameObjectName UTF8String], "CallOnStarted", [url UTF8String]);
@@ -750,6 +751,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         return;
     NSString *urlStr = [NSString stringWithUTF8String:url];
     currentURL = urlStr;
+    UnitySendMessage([gameObjectName UTF8String], "CallOnURLChange", [urlStr UTF8String]);
     
     NSURL *nsurl = [NSURL URLWithString:urlStr];
     //NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
