@@ -59,6 +59,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.FrameLayout;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
+import android.webkit.RenderProcessGoneDetail;
 // import android.support.v4.app.ActivityCompat;
 
 import java.io.File;
@@ -134,6 +135,13 @@ public class CWebViewPlugin extends Fragment {
 
     private String mBasicAuthUserName;
     private String mBasicAuthPassword;
+    
+    private String mGameObject;
+    private boolean mTransparent;
+    private boolean mZoom;
+    private int mAndroidForceDarkMode;
+    private String mUA;
+    private String mURL;
 
     public CWebViewPlugin() {
     }
@@ -280,6 +288,14 @@ public class CWebViewPlugin extends Fragment {
         final Activity a = UnityPlayer.currentActivity;
         instanceCount++;
         mInstanceId = instanceCount;
+        
+        mGameObject = gameObject;
+        mTransparent = transparent;
+        mZoom = zoom;
+        mAndroidForceDarkMode = androidForceDarkMode;
+        mUA = ua;
+        //mURL = "";
+        
         a.runOnUiThread(new Runnable() {public void run() {
             if (mWebView != null) {
                 return;
@@ -452,6 +468,41 @@ public class CWebViewPlugin extends Fragment {
                     canGoForward = webView.canGoForward();
                     mWebViewPlugin.call("CallOnError", errorCode + "\t" + description + "\t" + failingUrl);*/
                 }
+                
+                @Override
+                public boolean onRenderProcessGone (WebView view, RenderProcessGoneDetail detail) {
+                    // Cleanup webview and recreate a new one
+                    final Activity a = UnityPlayer.currentActivity;
+                    final CWebViewPlugin self = this;
+                    
+                    a.runOnUiThread(new Runnable() {public void run() {
+                        if (mWebView == null) {
+                            return;
+                        }
+                        
+                        // According to https://developer.android.com/reference/android/webkit/WebViewClient#onRenderProcessGone(android.webkit.WebView,%20android.webkit.RenderProcessGoneDetail)
+                        // It seems like we need to cleanup everything and re-create it
+                        if (mGlobalLayoutListener != null) {
+                            View activityRootView = a.getWindow().getDecorView().getRootView();
+                            activityRootView.getViewTreeObserver().removeOnGlobalLayoutListener(mGlobalLayoutListener);
+                            mGlobalLayoutListener = null;
+                        }
+                        
+                        if (mVideoView != null) {
+                            layout.removeView(mVideoView);
+                            layout.setBackgroundColor(0x00000000);
+                            mVideoView = null;
+                        }
+                        
+                        layout.removeView(mWebView);
+                        mWebView.destroy();
+                        mWebView = null;
+                        
+                        // Re-create WebView
+                        Init(mGameObject, mTransparent, mZoom, mAndroidForceDarkMode, mUA);
+                        LoadURL(mURL);
+                    }
+                }
 
                 @Override
                 public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
@@ -594,6 +645,11 @@ public class CWebViewPlugin extends Fragment {
                             || url.startsWith("javascript:"))) {
                         //mWebViewPlugin.call("CallOnStarted", url);
                         // Let webview handle the URL
+                        
+                        if (request.isForMainFrame()) {
+                            mURL = url;
+                        }
+                        
                         return false;
                     }
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -834,10 +890,13 @@ public class CWebViewPlugin extends Fragment {
             if (mWebView == null) {
                 return;
             }
+            
+            mURL = url;
+            
             if (mCustomHeaders != null && !mCustomHeaders.isEmpty()) {
                 mWebView.loadUrl(url, mCustomHeaders);
             } else {
-                mWebView.loadUrl(url);;
+                mWebView.loadUrl(url);
             }
         }});
     }
