@@ -19,6 +19,7 @@ static BOOL s_useMetal;
     NSRegularExpression *allowRegex;
     NSRegularExpression *denyRegex;
     NSRegularExpression *hookRegex;
+    NSString *currentURL;
 }
 @end
 
@@ -40,6 +41,7 @@ static WKProcessPool *_sharedProcessPool;
     allowRegex = nil;
     denyRegex = nil;
     hookRegex = nil;
+    currentURL = nil;
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
     WKUserContentController *controller = [[WKUserContentController alloc] init];
     WKPreferences *preferences = [[WKPreferences alloc] init];
@@ -168,6 +170,15 @@ static WKProcessPool *_sharedProcessPool;
     [self addMessage:[NSString stringWithFormat:@"E%@",[error description]]];
 }
 
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
+{
+    if (webView == nil || currentURL == nil)
+        return;
+    NSURL *nsurl = [NSURL URLWithString:currentURL];
+    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
+    [webView load:request];
+}
+
 - (void) webView:(WKWebView *) wkWebView decidePolicyForNavigationAction: (WKNavigationAction *) navigationAction decisionHandler: (void (^)(WKNavigationActionPolicy)) decisionHandler
 {
     if (webView == nil) {
@@ -227,6 +238,10 @@ static WKProcessPool *_sharedProcessPool;
             }
         }*/
     } else {
+        if (navigationAction.targetFrame.mainFrame) {
+            currentURL = url;
+        }
+    
         //[self addMessage:[NSString stringWithFormat: @"S%@", url]];
         decisionHandler(WKNavigationActionPolicyAllow);
     }
@@ -348,6 +363,8 @@ static WKProcessPool *_sharedProcessPool;
         return;
     
     NSString *urlStr = [NSString stringWithUTF8String: url];
+    currentURL = urlStr;
+    
     NSURL *nsurl = [NSURL URLWithString: urlStr];
     NSURLRequest *request = [NSURLRequest requestWithURL: nsurl];
 

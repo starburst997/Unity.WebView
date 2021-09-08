@@ -102,6 +102,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     NSRegularExpression *hookRegex;
     NSString *basicAuthUserName;
     NSString *basicAuthPassword;
+    NSString *currentURL;
 }
 @end
 
@@ -120,6 +121,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     allowRegex = nil;
     denyRegex = nil;
     hookRegex = nil;
+    currentURL = nil;
     basicAuthUserName = nil;
     basicAuthPassword = nil;
     UIView *view = UnityGetGLViewController().view;
@@ -420,6 +422,15 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     return nil;
 }
 
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView
+{
+    if (webView == nil || currentURL == nil)
+        return;
+    NSURL *nsurl = [NSURL URLWithString:currentURL];
+    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
+    [webView load:request];
+}
+
 - (void)webView:(WKWebView *)wkWebView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
     if (webView == nil) {
@@ -482,6 +493,11 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
             }
         }*/
     }
+    
+    if (navigationAction.targetFrame.mainFrame) {
+        currentURL = url;
+    }
+    
     //UnitySendMessage([gameObjectName UTF8String], "CallOnStarted", [url UTF8String]);
     decisionHandler(WKNavigationActionPolicyAllow);
 }
@@ -701,6 +717,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     if (webView == nil)
         return;
     NSString *urlStr = [NSString stringWithUTF8String:url];
+    currentURL = urlStr;
+    
     NSURL *nsurl = [NSURL URLWithString:urlStr];
     //NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
     NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
