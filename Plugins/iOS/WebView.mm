@@ -702,7 +702,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         return;
     webView.hidden = visibility ? NO : YES;
     
-    if (visibility) {
+    /*if (visibility) {
         if ([webView superview] == nil) {
             UIView *view = UnityGetGLViewController().view;
             [view addSubview:webView];
@@ -711,7 +711,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         if ([webView superview] != nil) {
             [webView removeFromSuperview];
         }
-    }
+    }*/
 }
 
 - (void)setAlertDialogEnabled:(BOOL)enabled
