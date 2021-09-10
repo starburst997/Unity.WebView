@@ -699,7 +699,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     CGRect screen = view.bounds;
     
     frame.size.width = screen.size.width;
-    frame.size.height = screen.size.height - height;
+    frame.size.height = height;
     frame.origin.x = 0;
     frame.origin.y = 0;
     
