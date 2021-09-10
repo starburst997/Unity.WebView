@@ -805,8 +805,10 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     UnitySendMessage([gameObjectName UTF8String], "CallOnURLChange", [urlStr UTF8String]);
     
     NSURL *nsurl = [NSURL URLWithString:urlStr];
-    //NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
-    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
+    
+    // Weird results with this, better off
+    //NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
     [webView load:request];
 }
 
@@ -880,7 +882,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         return;
     
     NSURL *nsurl = [NSURL URLWithString:currentURL];
-    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
+    NSURLRequest *request = [NSURLRequest requestWithURL:nsurl];
+    //NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
     [webView load:request];
 }
 
