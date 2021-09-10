@@ -473,7 +473,6 @@ public class CWebViewPlugin extends Fragment {
                 public boolean onRenderProcessGone (WebView view, RenderProcessGoneDetail detail) {
                     // Cleanup webview and recreate a new one
                     final Activity a = UnityPlayer.currentActivity;
-                    final CWebViewPlugin self = this;
                     
                     a.runOnUiThread(new Runnable() {public void run() {
                         if (mWebView == null) {
@@ -504,7 +503,9 @@ public class CWebViewPlugin extends Fragment {
                         
                         // Tell unity
                         mWebViewPlugin.call("CallOnTerminate", "");
-                    }
+                    }});
+                    
+                    return true;
                 }
 
                 @Override
