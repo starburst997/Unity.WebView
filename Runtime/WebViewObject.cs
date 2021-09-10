@@ -424,14 +424,15 @@ public class WebViewObject : MonoBehaviour
 #endif
         bool r = relative;
 
-        if (ml == mMarginLeftComputed
+        /*if (ml == mMarginLeftComputed
             && mt == mMarginTopComputed
             && mr == mMarginRightComputed
             && mb == mMarginBottomComputed
             && r == mMarginRelativeComputed)
         {
             return;
-        }
+        }*/
+        
         mMarginLeftComputed = ml;
         mMarginTopComputed = mt;
         mMarginRightComputed = mr;
