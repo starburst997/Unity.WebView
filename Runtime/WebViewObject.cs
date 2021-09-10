@@ -160,6 +160,8 @@ public class WebViewObject : MonoBehaviour
     private static extern void _CWebViewPlugin_SetMargins(
         IntPtr instance, float left, float top, float right, float bottom, bool relative);
     [DllImport("__Internal")]
+    private static extern void _CWebViewPlugin_SetHeight(IntPtr instance, float height);
+    [DllImport("__Internal")]
     private static extern void _CWebViewPlugin_SetVisibility(
         IntPtr instance, bool visibility);
     [DllImport("__Internal")]
@@ -342,6 +344,17 @@ public class WebViewObject : MonoBehaviour
         float bottom = (Screen.height - scale.y) / 2.0f + center.y;
         float top = Screen.height - (bottom + scale.y);
         SetMargins((int)left, (int)top, (int)right, (int)bottom);
+#endif
+    }
+
+    // iOS fix only for now
+    public void SetHeight(int height)
+    {
+#if UNITY_IOS
+        if (webView == IntPtr.Zero)
+            return;
+        
+        _CWebViewPlugin_SetHeight(webView, (float) height);
 #endif
     }
 

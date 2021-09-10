@@ -189,6 +189,11 @@ public class WebViewMac : MonoBehaviour
         SetMargins((int)left, (int)top, (int)right, (int)bottom);
     }
 
+    public void SetHeight(int height)
+    {
+        // TODO: Unsupported
+    }
+
     public void SetMargins(int left, int top, int right, int bottom, bool relative = false)
     {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX

@@ -689,6 +689,23 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     webView.frame = frame;
 }
 
+- (void)setHeight:(float)height
+{
+    if (webView == nil)
+        return;
+    
+    UIView *view = UnityGetGLViewController().view;
+    CGRect frame = webView.frame;
+    CGRect screen = view.bounds;
+    
+    frame.size.width = screen.size.width;
+    frame.size.height = screen.size.height - height;
+    frame.origin.x = 0;
+    frame.origin.y = 0;
+    
+    webView.frame = frame;
+}
+
 - (CGFloat)getScale:(UIView *)view
 {
     if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
@@ -702,7 +719,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         return;
     webView.hidden = visibility ? NO : YES;
     
-    /*if (visibility) {
+    if (visibility) {
         if ([webView superview] == nil) {
             UIView *view = UnityGetGLViewController().view;
             [view addSubview:webView];
@@ -711,7 +728,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         if ([webView superview] != nil) {
             [webView removeFromSuperview];
         }
-    }*/
+    }
 }
 
 - (void)setAlertDialogEnabled:(BOOL)enabled
@@ -920,6 +937,7 @@ extern "C" {
     void _CWebViewPlugin_Destroy(void *instance);
     void _CWebViewPlugin_SetMargins(
         void *instance, float left, float top, float right, float bottom, BOOL relative);
+    void _CWebViewPlugin_SetHeight(void *instance, float height);
     void _CWebViewPlugin_SetVisibility(void *instance, BOOL visibility);
     void _CWebViewPlugin_SetAlertDialogEnabled(void *instance, BOOL visibility);
     void _CWebViewPlugin_SetScrollBounceEnabled(void *instance, BOOL enabled);
@@ -986,6 +1004,14 @@ void _CWebViewPlugin_SetMargins(
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin setMargins:left top:top right:right bottom:bottom relative:relative];
+}
+
+void _CWebViewPlugin_SetHeight(void *instance, float height)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin setHeight:height];
 }
 
 void _CWebViewPlugin_SetVisibility(void *instance, BOOL visibility)
