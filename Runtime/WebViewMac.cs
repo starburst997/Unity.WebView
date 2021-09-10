@@ -241,6 +241,11 @@ public class WebViewMac : MonoBehaviour
 #endif
     }
 
+    public void SetVisibilitySoft(bool v)
+    {
+        SetVisibility(v);
+    }
+
     public void SetVisibility(bool v)
     {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX

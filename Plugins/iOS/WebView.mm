@@ -731,6 +731,13 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     }
 }
 
+- (void)setVisibilitySoft:(BOOL)visibility
+{
+    if (webView == nil)
+        return;
+    webView.hidden = visibility ? NO : YES;
+}
+
 - (void)setAlertDialogEnabled:(BOOL)enabled
 {
     alertDialogEnabled = enabled;
@@ -939,6 +946,7 @@ extern "C" {
         void *instance, float left, float top, float right, float bottom, BOOL relative);
     void _CWebViewPlugin_SetHeight(void *instance, float height);
     void _CWebViewPlugin_SetVisibility(void *instance, BOOL visibility);
+    void _CWebViewPlugin_SetVisibilitySoft(void *instance, BOOL visibility);
     void _CWebViewPlugin_SetAlertDialogEnabled(void *instance, BOOL visibility);
     void _CWebViewPlugin_SetScrollBounceEnabled(void *instance, BOOL enabled);
     BOOL _CWebViewPlugin_SetURLPattern(void *instance, const char *allowPattern, const char *denyPattern, const char *hookPattern);
@@ -1020,6 +1028,14 @@ void _CWebViewPlugin_SetVisibility(void *instance, BOOL visibility)
         return;
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
     [webViewPlugin setVisibility:visibility];
+}
+
+void _CWebViewPlugin_SetVisibilitySoft(void *instance, BOOL visibility)
+{
+    if (instance == NULL)
+        return;
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *)instance;
+    [webViewPlugin setVisibilitySoft:visibility];
 }
 
 void _CWebViewPlugin_SetAlertDialogEnabled(void *instance, BOOL enabled)

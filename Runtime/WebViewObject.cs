@@ -165,6 +165,8 @@ public class WebViewObject : MonoBehaviour
     private static extern void _CWebViewPlugin_SetVisibility(
         IntPtr instance, bool visibility);
     [DllImport("__Internal")]
+    private static extern void _CWebViewPlugin_SetVisibilitySoft(IntPtr instance, bool visibility);
+    [DllImport("__Internal")]
     private static extern void _CWebViewPlugin_SetAlertDialogEnabled(
         IntPtr instance, bool enabled);
     [DllImport("__Internal")]
@@ -449,6 +451,17 @@ public class WebViewObject : MonoBehaviour
         _CWebViewPlugin_SetMargins(webView, ml, mt, mr, mb, r);
 #elif UNITY_ANDROID
         webView.Call("SetMargins", (int)ml, (int)mt, (int)mr, (int)mb);
+#endif
+    }
+
+    public void SetVisibilitySoft(bool v)
+    {
+#if UNITY_IPHONE
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_SetVisibilitySoft(webView, v);
+#else
+        SetVisibility(v);
 #endif
     }
 
