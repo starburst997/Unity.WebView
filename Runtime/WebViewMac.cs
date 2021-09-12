@@ -194,6 +194,11 @@ public class WebViewMac : MonoBehaviour
         // TODO: Unsupported
     }
 
+    public int GetStatusBarHeight()
+    {
+        return 0;
+    }
+
     public void SetMargins(int left, int top, int right, int bottom, bool relative = false)
     {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX

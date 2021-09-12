@@ -555,6 +555,17 @@ public class WebViewObject : MonoBehaviour
         return webView.Call<bool>("SetURLPattern", allowPattern, denyPattern, hookPattern);
 #endif
     }
+    
+    public int GetStatusBarHeight()
+    {
+#if UNITY_ANDROID
+        if (webView == null)
+            return 0;
+        return webView.Call<int>("GetStatusBarHeight");
+#else
+        return 0;
+#endif
+    }
 
     public void LoadURL(string url)
     {

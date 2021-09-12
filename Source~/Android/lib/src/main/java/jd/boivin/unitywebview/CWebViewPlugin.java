@@ -43,6 +43,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.view.Window;
 import android.webkit.GeolocationPermissions.Callback;
 import android.webkit.HttpAuthHandler;
 import android.webkit.JavascriptInterface;
@@ -60,6 +61,8 @@ import android.widget.FrameLayout;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.RenderProcessGoneDetail;
+import android.graphics.Rect;
+
 // import android.support.v4.app.ActivityCompat;
 
 import java.io.File;
@@ -105,6 +108,8 @@ class CWebViewPluginInterface {
 }
 
 public class CWebViewPlugin extends Fragment {
+
+    private static final String TAG = "WebView";
 
     private static final int REQUEST_CODE = 100001;
 
@@ -288,6 +293,8 @@ public class CWebViewPlugin extends Fragment {
         final Activity a = UnityPlayer.currentActivity;
         instanceCount++;
         mInstanceId = instanceCount;
+        
+        Log.i(TAG, "WebView Notessimo Init");
         
         mGameObject = gameObject;
         mTransparent = transparent;
@@ -869,6 +876,27 @@ public class CWebViewPlugin extends Fragment {
             }
 
         }});
+    }
+
+    public int GetStatusBarHeight() 
+    {
+        /*final Activity a = UnityPlayer.currentActivity;
+    
+        Rect rectangle = new Rect();
+        Window window = a.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        int statusBarHeight = rectangle.top;
+        int contentViewTop = 
+            window.findViewById(Window.ID_ANDROID_CONTENT).getTop();
+        return contentViewTop - statusBarHeight;*/
+        
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        
+        return Math.round(result / getResources().getDisplayMetrics().density);
     }
 
     public boolean SetURLPattern(final String allowPattern, final String denyPattern, final String hookPattern)
