@@ -195,7 +195,7 @@ static WKProcessPool *_sharedProcessPool;
     
     NSURL *nsurl = [NSURL URLWithString:currentURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
-    [webView load:request];*/
+    [webView loadRequest:request];*/
 }
 
 - (void) webView:(WKWebView *) wkWebView decidePolicyForNavigationAction: (WKNavigationAction *) navigationAction decisionHandler: (void (^)(WKNavigationActionPolicy)) decisionHandler
@@ -215,7 +215,7 @@ static WKProcessPool *_sharedProcessPool;
     }
     
     if (!pass) {
-        if (action.targetFrame.mainFrame) {
+        if (navigationAction.targetFrame.mainFrame) {
             decisionHandler(WKNavigationActionPolicyCancel);
             [[NSWorkspace sharedWorkspace] openURL: [NSURL URLWithString: url]];
         } else {
@@ -477,7 +477,7 @@ static WKProcessPool *_sharedProcessPool;
     
     NSURL *nsurl = [NSURL URLWithString:currentURL];
     NSURLRequest *request = [NSURLRequest requestWithURL:nsurl cachePolicy:NSURLRequestReturnCacheDataElseLoad timeoutInterval:60];
-    [webView load:request];
+    [webView loadRequest:request];
 }
 
 - (void) addCustomRequestHeader: (const char *) headerKey value: (const char *) headerValue
