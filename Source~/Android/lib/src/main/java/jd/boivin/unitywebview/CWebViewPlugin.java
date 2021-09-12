@@ -147,6 +147,8 @@ public class CWebViewPlugin extends Fragment {
     private int mAndroidForceDarkMode;
     private String mUA;
     private String mURL;
+    
+    private FrameLayout.LayoutParams mLayout;
 
     public CWebViewPlugin() {
     }
@@ -747,12 +749,11 @@ public class CWebViewPlugin extends Fragment {
                 layout.setFocusable(true);
                 layout.setFocusableInTouchMode(true);
             }
-            layout.addView(
-                webView,
-                new FrameLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT,
-                    Gravity.NO_GRAVITY));
+            
+            mLayout = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+                                                   LayoutParams.MATCH_PARENT,
+                                                   Gravity.NO_GRAVITY);
+            layout.addView(webView, mLayout);
             mWebView = webView;
         }});
 
@@ -878,6 +879,7 @@ public class CWebViewPlugin extends Fragment {
         }});
     }
 
+    // TODO: Remove, no longer needed
     public int GetStatusBarHeight() 
     {
         /*final Activity a = UnityPlayer.currentActivity;
@@ -1020,23 +1022,48 @@ public class CWebViewPlugin extends Fragment {
         }});
     }
 
-    public void SetMargins(int left, int top, int right, int bottom) {
-        final FrameLayout.LayoutParams params
-            = new FrameLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.MATCH_PARENT,
-                Gravity.NO_GRAVITY);
-        params.setMargins(left, top, right, bottom);
+    public void SetMargins(final int left, final int top, final int right, final int bottom) {
         final Activity a = UnityPlayer.currentActivity;
         a.runOnUiThread(new Runnable() {public void run() {
             if (mWebView == null) {
                 return;
             }
-            mWebView.setLayoutParams(params);
+            
+            mLayout = new FrameLayout.LayoutParams(
+                        LayoutParams.MATCH_PARENT,
+                        LayoutParams.MATCH_PARENT,
+                        Gravity.NO_GRAVITY);
+            mLayout.setMargins(left, top, right, bottom);
+            
+            mWebView.setLayoutParams(mLayout);
         }});
     }
 
     public void SetVisibility(final boolean visibility) {
+        final Activity a = UnityPlayer.currentActivity;
+        a.runOnUiThread(new Runnable() {public void run() {
+            if (mWebView == null) {
+                return;
+            }
+            if (visibility) {
+                if (mWebView.getParent() == null) {
+                    layout.addView(mWebView, mLayout);
+                }
+                
+                mWebView.setVisibility(View.VISIBLE);
+                layout.requestFocus();
+                mWebView.requestFocus();
+            } else {
+                if (mWebView.getParent() != null) {
+                    layout.removeView(mWebView);
+                }
+                
+                mWebView.setVisibility(View.GONE);
+            }
+        }});
+    }
+    
+    public void SetVisibilitySoft(final boolean visibility) {
         final Activity a = UnityPlayer.currentActivity;
         a.runOnUiThread(new Runnable() {public void run() {
             if (mWebView == null) {

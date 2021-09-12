@@ -460,6 +460,11 @@ public class WebViewObject : MonoBehaviour
         if (webView == IntPtr.Zero)
             return;
         _CWebViewPlugin_SetVisibilitySoft(webView, v);
+#elif UNITY_ANDROID
+        if (webView == null)
+            return;
+        mVisibility = v;
+        webView.Call("SetVisibilitySoft", v);
 #else
         SetVisibility(v);
 #endif
