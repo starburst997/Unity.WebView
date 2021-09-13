@@ -988,7 +988,7 @@ public class CWebViewPlugin extends Fragment {
             if (mWebView == null) {
                 return;
             }
-            mWebView.setBackgroundColor(0xffffffff);
+            mWebView.setBackgroundColor(0xff2a2d40); //0xffffffff);
         }});
     }
     
