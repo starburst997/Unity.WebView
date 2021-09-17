@@ -1,6 +1,8 @@
 # Unity.WebView
 Display WebView in Unity
 
+Last commit from ~ Jul 20, 2021
+
 This is a fork of [Gree's](https://github.com/gree) [unity-webview](https://github.com/gree/unity-webview), I just re-packaged it for my own convenience and added a few things (like mac standalone player support) 
 
 Support iOS / Android / Mac
