@@ -90,7 +90,7 @@ static WKProcessPool *_sharedProcessPool;
     webView.UIDelegate = self;
     
     //webView.navigationDelegate = self;
-    //[webView addObserver: self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context: nil];
+    [webView addObserver: self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context: nil];
     
     gameObject = [NSString stringWithUTF8String: gameObject_];
     if (ua != NULL && strcmp(ua, "") != 0) {
@@ -134,7 +134,7 @@ static WKProcessPool *_sharedProcessPool;
             webView0.UIDelegate = nil;
             webView0.navigationDelegate = nil;
             [webView0 stopLoading];
-            //[webView0 removeObserver:self forKeyPath:@"loading"];
+            [webView0 removeObserver:self forKeyPath:@"loading"];
         }
         
         gameObject = nil;

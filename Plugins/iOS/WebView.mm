@@ -200,7 +200,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.hidden = YES;
     
-    //[webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
+    [webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
 
     [view addSubview:webView];
 
@@ -314,7 +314,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         }
         [webView0 stopLoading];
         [webView0 removeFromSuperview];
-        //[webView0 removeObserver:self forKeyPath:@"loading"];
+        [webView0 removeObserver:self forKeyPath:@"loading"];
     }
     basicAuthPassword = nil;
     basicAuthUserName = nil;

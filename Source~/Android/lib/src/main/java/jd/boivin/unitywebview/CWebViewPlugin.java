@@ -535,7 +535,7 @@ public class CWebViewPlugin extends Fragment {
                 public void onPageFinished(WebView view, String url) {
                     canGoBack = webView.canGoBack();
                     canGoForward = webView.canGoForward();
-                    //mWebViewPlugin.call("CallOnLoaded", url);
+                    mWebViewPlugin.call("CallOnLoaded", url);
                 }
 
                 @Override
