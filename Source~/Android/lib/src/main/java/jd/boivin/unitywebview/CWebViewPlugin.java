@@ -157,7 +157,7 @@ public class CWebViewPlugin extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case REQUEST_CODE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults != null && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     ProcessChooser(mFilePathCallback);
                 }
                 break;
