@@ -35,6 +35,7 @@ using UnityEngine.Rendering;
 
 using Callback = System.Action<string>;
 
+#pragma warning disable CS0162
 public class WebViewObject : MonoBehaviour
 {
     Callback onJS;
