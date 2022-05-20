@@ -93,29 +93,61 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
 @end
 
-// Use category instead to hack the main viewcontroller
-static UIInterfaceOrientation _deviceOrientation = UIInterfaceOrientationUnknown;
-static UIView <WebViewProtocol> *_webView = nil;
-static BOOL _init = NO;
-
 // Force portrait only on child view controller
-@interface UIViewController (WebViewController)
+@interface WebViewController : UIViewController
+{
+    UIView <WebViewProtocol> *webView;
+    BOOL _init;
+    UIInterfaceOrientation _deviceOrientation;
+}
+
+- (void) setWebView: UIView <WebViewProtocol> *webView;
+
 @end
 
-@implementation UIViewController (WebViewController)
+@implementation WebViewController
+
+- (id) init
+{
+    self = [super init];
+    _init = NO;
+    _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    return self;
+}
+
+- (void) setWebView: UIView <WebViewProtocol> *webView
+{
+    _init = YES;
+    self.webView = webView;
+}
+
+/*- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}*/
 
 - (void) viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
  
     BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
-    /*if (!canProceed)
+    if (!canProceed)
     {
         _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    }*/
+    }
  
     if (_init && canProceed) {
-        _webView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        webView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
     }
 }
 
@@ -135,19 +167,19 @@ static BOOL _init = NO;
             CGAffineTransform deltaTransform = coordinator.targetTransform;
             CGFloat deltaAngle = atan2f(deltaTransform.b, deltaTransform.a);
      
-            CGFloat currentRotation = [[_webView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
+            CGFloat currentRotation = [[webView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
             // Adding a small value to the rotation angle forces the animation to occur in a the desired direction, preventing an issue where the view would appear to rotate 2PI radians during a rotation from LandscapeRight -> LandscapeLeft.
             currentRotation += -1 * deltaAngle + 0.0001;
-            [_webView.layer setValue:@(currentRotation) forKeyPath:@"transform.rotation.z"];
+            [webView.layer setValue:@(currentRotation) forKeyPath:@"transform.rotation.z"];
      
         } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
             // Integralize the transform to undo the extra 0.0001 added to the rotation angle.
-            CGAffineTransform currentTransform = _webView.transform;
+            CGAffineTransform currentTransform = webView.transform;
             currentTransform.a = round(currentTransform.a);
             currentTransform.b = round(currentTransform.b);
             currentTransform.c = round(currentTransform.c);
             currentTransform.d = round(currentTransform.d);
-            _webView.transform = currentTransform;
+            webView.transform = currentTransform;
         }];
     }
 }
@@ -226,11 +258,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         configuration.suppressesIncrementalRendering = false;
         
         webView = [[WKWebView alloc] initWithFrame:view.frame configuration:configuration];
-        
-        // Init static var for UIViewController hack
-        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-        _webView = webView;
-        _init = YES;
+        [child setWebView: webView];
         
         webView.UIDelegate = self;
         webView.navigationDelegate = self;
