@@ -249,8 +249,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         
         configuration.suppressesIncrementalRendering = false;
         
-        webView = [[WKWebView alloc] initWithFrame:view.frame configuration:configuration];
-        [child setWebView: webView];
+        webView = [[WKWebView alloc] initWithFrame:webViewController.view.frame configuration:configuration];
+        [webViewController setWebView: webView];
         
         webView.UIDelegate = self;
         webView.navigationDelegate = self;
