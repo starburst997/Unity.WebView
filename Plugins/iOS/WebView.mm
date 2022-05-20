@@ -177,6 +177,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
 @interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
 {
+    WebViewController *webViewController;
     UIView <WebViewProtocol> *webView;
     NSString *gameObjectName;
     NSMutableDictionary *customRequestHeader;
@@ -200,7 +201,11 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     self = [super init];
 
     UIViewController *parent = UnityGetGLViewController();
-    WebViewController *child = [[WebViewController alloc] init];
+    webViewController = [[WebViewController alloc] init];
+    
+    [parent addChildViewController: webViewController];
+    webViewController.view.frame = parent.view.frame;
+    [parent.view addSubview: webViewController.view];
 
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
     customRequestHeader = [[NSMutableDictionary alloc] init];
@@ -212,7 +217,6 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     basicAuthUserName = nil;
     basicAuthPassword = nil;
     
-    UIView *view = child.view;
     if (enableWKWebView && [WKWebView class]) {
         if (_sharedProcessPool == NULL) {
             _sharedProcessPool = [[WKProcessPool alloc] init];
@@ -289,9 +293,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     
     [webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
 
-    [view addSubview:webView];
-
-    [parent addChildViewController: child];
+    [webViewController.view addSubview:webView];
 
     return self;
 }
@@ -810,8 +812,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     
     if (visibility) {
         if ([webView superview] == nil) {
-            UIView *view = UnityGetGLViewController().view;
-            [view addSubview:webView];
+            [webViewController.view addSubview:webView];
         }
     } else {
         if ([webView superview] != nil) {
