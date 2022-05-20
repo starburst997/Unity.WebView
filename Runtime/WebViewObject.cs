@@ -61,7 +61,12 @@ public class WebViewObject : MonoBehaviour
     bool mMarginRelativeComputed;
 #if UNITY_IPHONE
     IntPtr webView;
-#elif UNITY_ANDROID
+#elif UNITY_ANDROID 
+#else
+    IntPtr webView;
+#endif
+
+#if UNITY_ANDROID
     AndroidJavaObject webView;
     
     bool mVisibility;
@@ -92,6 +97,11 @@ public class WebViewObject : MonoBehaviour
         }
     }
 
+    public void Pause(bool paused)
+    {
+        webView.Call("OnApplicationPause", paused);
+    }
+    
     /// Called from Java native plugin to set when the keyboard is opened
     public void SetKeyboardVisible(string pIsVisible)
     {
@@ -125,7 +135,10 @@ public class WebViewObject : MonoBehaviour
         }
     }
 #else
-    IntPtr webView;
+    public void Pause(bool paused)
+    {
+        // Nothing
+    }
 #endif
 
     void Awake()
