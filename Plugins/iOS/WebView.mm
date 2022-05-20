@@ -93,6 +93,99 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
 @end
 
+// Force portrait only on child view controller
+@interface WebViewController : UIViewController
+{
+    UIView <WebViewProtocol> *webView;
+    BOOL _init;
+    UIInterfaceOrientation _deviceOrientation;
+}
+
+- (void) setWebView: UIView <WebViewProtocol> *webView;
+
+@end
+
+@implementation WebViewController
+
+- (id) init
+{
+    self = [super init];
+    _init = NO;
+    _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    
+    return self;
+}
+
+- (void) setWebView: UIView <WebViewProtocol> *webView
+{
+    _init = YES;
+    self.webView = webView;
+}
+
+/*- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}*/
+
+- (void) viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
+ 
+    BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
+    if (!canProceed)
+    {
+        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    }
+ 
+    if (_init && canProceed) {
+        webView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+    }
+}
+
+// Based on https://developer.apple.com/library/archive/qa/qa1890/_index.html
+- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+ 
+    BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
+    if (!canProceed)
+    {
+        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    }
+ 
+    if (_init && canProceed) {
+        [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            CGAffineTransform deltaTransform = coordinator.targetTransform;
+            CGFloat deltaAngle = atan2f(deltaTransform.b, deltaTransform.a);
+     
+            CGFloat currentRotation = [[webView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
+            // Adding a small value to the rotation angle forces the animation to occur in a the desired direction, preventing an issue where the view would appear to rotate 2PI radians during a rotation from LandscapeRight -> LandscapeLeft.
+            currentRotation += -1 * deltaAngle + 0.0001;
+            [webView.layer setValue:@(currentRotation) forKeyPath:@"transform.rotation.z"];
+     
+        } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
+            // Integralize the transform to undo the extra 0.0001 added to the rotation angle.
+            CGAffineTransform currentTransform = webView.transform;
+            currentTransform.a = round(currentTransform.a);
+            currentTransform.b = round(currentTransform.b);
+            currentTransform.c = round(currentTransform.c);
+            currentTransform.d = round(currentTransform.d);
+            webView.transform = currentTransform;
+        }];
+    }
+}
+
+@end
+
 @interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
 {
     UIView <WebViewProtocol> *webView;
@@ -106,27 +199,6 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     NSString *basicAuthPassword;
     NSString *currentURL;
 }
-@end
-
-// Force portrait only on child view controller
-@interface WebViewController : UIViewController
-
-@end
-
-@implementation WebViewController
-
-- (BOOL) shouldAutorotate {
-    return NO;
-}
-
-- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
-}
-
 @end
 
 @implementation CWebViewPlugin
@@ -186,6 +258,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         configuration.suppressesIncrementalRendering = false;
         
         webView = [[WKWebView alloc] initWithFrame:view.frame configuration:configuration];
+        [child setWebView: webView];
         
         webView.UIDelegate = self;
         webView.navigationDelegate = self;
