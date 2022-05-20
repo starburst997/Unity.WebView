@@ -100,10 +100,6 @@ static BOOL _init = NO;
 
 // Force portrait only on child view controller
 @interface UIViewController (WebViewController)
-
-- (void) viewWillLayoutSubviews;
-- (void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator;
-
 @end
 
 @implementation UIViewController (WebViewController)
