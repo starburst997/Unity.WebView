@@ -96,7 +96,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 // Force portrait only on child view controller
 @interface WebViewController : UIViewController
 {
-    UIView <WebViewProtocol> *webView;
+    UIView <WebViewProtocol> *_webView;
     BOOL _init;
     UIInterfaceOrientation _deviceOrientation;
 }
@@ -108,10 +108,13 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 - (id) init
 {
     self = [super init];
-    _init = NO;
-    _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    if (self) {
+        _init = NO;
+        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+        
+        //self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    }
     
     return self;
 }
@@ -119,7 +122,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 - (void) setWebView: (UIView <WebViewProtocol> *) webView
 {
     _init = YES;
-    self.webView = webView;
+    _webView = webView;
 }
 
 - (void) viewWillLayoutSubviews
@@ -127,13 +130,13 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     [super viewWillLayoutSubviews];
  
     BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
-    /*if (!canProceed)
-    {
-        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    }*/
+    //if (!canProceed)
+    //{
+    //    _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    //}
  
     if (_init && canProceed) {
-        webView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
+        _webView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
     }
 }
 
@@ -153,19 +156,19 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
             CGAffineTransform deltaTransform = coordinator.targetTransform;
             CGFloat deltaAngle = atan2f(deltaTransform.b, deltaTransform.a);
      
-            CGFloat currentRotation = [[webView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
+            CGFloat currentRotation = [[_webView.layer valueForKeyPath:@"transform.rotation.z"] floatValue];
             // Adding a small value to the rotation angle forces the animation to occur in a the desired direction, preventing an issue where the view would appear to rotate 2PI radians during a rotation from LandscapeRight -> LandscapeLeft.
             currentRotation += -1 * deltaAngle + 0.0001;
-            [webView.layer setValue:@(currentRotation) forKeyPath:@"transform.rotation.z"];
+            [_webView.layer setValue:@(currentRotation) forKeyPath:@"transform.rotation.z"];
      
         } completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
             // Integralize the transform to undo the extra 0.0001 added to the rotation angle.
-            CGAffineTransform currentTransform = webView.transform;
+            CGAffineTransform currentTransform = _webView.transform;
             currentTransform.a = round(currentTransform.a);
             currentTransform.b = round(currentTransform.b);
             currentTransform.c = round(currentTransform.c);
             currentTransform.d = round(currentTransform.d);
-            webView.transform = currentTransform;
+            _webView.transform = currentTransform;
         }];
     }
 }
@@ -198,7 +201,6 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 
     UIViewController *parent = UnityGetGLViewController();
     WebViewController *child = [[WebViewController alloc] init];
-    [parent addChildViewController: child];
 
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
     customRequestHeader = [[NSMutableDictionary alloc] init];
@@ -288,6 +290,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     [webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
 
     [view addSubview:webView];
+
+    [parent addChildViewController: child];
 
     return self;
 }
