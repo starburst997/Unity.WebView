@@ -111,7 +111,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     
     if (self) {
         _init = NO;
-        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+        _deviceOrientation = self.interfaceOrientation;
         
         //self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     }
@@ -132,7 +132,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
     //if (!canProceed)
     //{
-    //    _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    //    _deviceOrientation = self.interfaceOrientation;
     //}
  
     if (_init && canProceed) {
@@ -148,7 +148,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
     if (!canProceed)
     {
-        _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+        _deviceOrientation = self.interfaceOrientation;
     }
  
     if (_init && canProceed) {
