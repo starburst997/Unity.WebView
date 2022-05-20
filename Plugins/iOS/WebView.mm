@@ -108,6 +108,27 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 }
 @end
 
+// Force portrait only on child view controller
+@interface WebViewController : UIViewController
+
+@end
+
+@implementation WebViewController
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+@end
+
 @implementation CWebViewPlugin
 
 static WKProcessPool *_sharedProcessPool;
@@ -116,6 +137,10 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 - (id)initWithGameObjectName:(const char *)gameObjectName_ transparent:(BOOL)transparent zoom:(BOOL)zoom ua:(const char *)ua enableWKWebView:(BOOL)enableWKWebView contentMode:(WKContentMode)contentMode
 {
     self = [super init];
+
+    UIViewController *parent = UnityGetGLViewController();
+    UIViewController *child = [[WebViewController alloc] init];
+    [parent addChildViewController: child];
 
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
     customRequestHeader = [[NSMutableDictionary alloc] init];
@@ -126,7 +151,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     currentURL = nil;
     basicAuthUserName = nil;
     basicAuthPassword = nil;
-    UIView *view = UnityGetGLViewController().view;
+    
+    UIView *view = child.view;
     if (enableWKWebView && [WKWebView class]) {
         if (_sharedProcessPool == NULL) {
             _sharedProcessPool = [[WKProcessPool alloc] init];
