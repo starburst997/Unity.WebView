@@ -124,27 +124,15 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     self.webView = webView;
 }
 
-/*- (BOOL) shouldAutorotate {
-    return NO;
-}
-
-- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
-}*/
-
 - (void) viewWillLayoutSubviews
 {
     [super viewWillLayoutSubviews];
  
     BOOL canProceed = _deviceOrientation == UIInterfaceOrientationPortrait;
-    if (!canProceed)
+    /*if (!canProceed)
     {
         _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    }
+    }*/
  
     if (_init && canProceed) {
         webView.center = CGPointMake(CGRectGetMidX(self.view.bounds), CGRectGetMidY(self.view.bounds));
