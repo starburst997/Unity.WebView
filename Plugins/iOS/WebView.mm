@@ -178,6 +178,10 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
 {
     self = [super init];
 
+    UIViewController *parent = UnityGetGLViewController();
+    UIViewController *child = [[WebViewController alloc] init];
+    [parent addChildViewController: child];
+
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
     customRequestHeader = [[NSMutableDictionary alloc] init];
     alertDialogEnabled = true;
@@ -188,7 +192,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     basicAuthUserName = nil;
     basicAuthPassword = nil;
     
-    UIView *view = UnityGetGLViewController().view;
+    UIView *view = child.view;
     if (enableWKWebView && [WKWebView class]) {
         if (_sharedProcessPool == NULL) {
             _sharedProcessPool = [[WKProcessPool alloc] init];
