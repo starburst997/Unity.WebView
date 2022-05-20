@@ -100,9 +100,7 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     BOOL _init;
     UIInterfaceOrientation _deviceOrientation;
 }
-
-- (void) setWebView: UIView <WebViewProtocol> *webView;
-
+//- (void) setWebView: (UIView <WebViewProtocol> *) webView;
 @end
 
 @implementation WebViewController
@@ -113,12 +111,12 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
     _init = NO;
     _deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     
-    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     return self;
 }
 
-- (void) setWebView: UIView <WebViewProtocol> *webView
+- (void) setWebView: (UIView <WebViewProtocol> *) webView
 {
     _init = YES;
     self.webView = webView;
@@ -199,7 +197,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     self = [super init];
 
     UIViewController *parent = UnityGetGLViewController();
-    UIViewController *child = [[WebViewController alloc] init];
+    WebViewController *child = [[WebViewController alloc] init];
     [parent addChildViewController: child];
 
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
