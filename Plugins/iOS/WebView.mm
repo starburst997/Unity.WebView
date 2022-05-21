@@ -93,7 +93,9 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
 
 @end
 
-// Force portrait only on child view controller
+// Did not work as expected, was close tho, sometimes it would look like as if it did not auto rotate, maybe because we also remove it from hierarchy albeit with a slight delay it seems
+// Revisit eventually for extra polish
+/*// Force portrait only on child view controller
 @interface WebViewController : UIViewController
 {
     UIView <WebViewProtocol> *_webView;
@@ -172,12 +174,11 @@ extern "C" void UnitySendMessage(const char *, const char *, const char *);
         }];
     }
 }
-
-@end
+@end*/
 
 @interface CWebViewPlugin : NSObject<WKUIDelegate, WKNavigationDelegate, WKScriptMessageHandler>
 {
-    WebViewController *webViewController;
+    //WebViewController *webViewController;
     UIView <WebViewProtocol> *webView;
     NSString *gameObjectName;
     NSMutableDictionary *customRequestHeader;
@@ -201,11 +202,11 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     self = [super init];
 
     UIViewController *parent = UnityGetGLViewController();
-    webViewController = [[WebViewController alloc] init];
+    /*webViewController = [[WebViewController alloc] init];
     
     [parent addChildViewController: webViewController];
     webViewController.view.frame = parent.view.frame;
-    [parent.view addSubview: webViewController.view];
+    [parent.view addSubview: webViewController.view];*/
 
     gameObjectName = [NSString stringWithUTF8String:gameObjectName_];
     customRequestHeader = [[NSMutableDictionary alloc] init];
@@ -249,8 +250,9 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
         
         configuration.suppressesIncrementalRendering = false;
         
-        webView = [[WKWebView alloc] initWithFrame:webViewController.view.frame configuration:configuration];
-        [webViewController setWebView: webView];
+        webView = [[WKWebView alloc] initWithFrame:parent.view.frame configuration:configuration];
+        //webView = [[WKWebView alloc] initWithFrame:webViewController.view.frame configuration:configuration];
+        //[webViewController setWebView: webView];
         
         webView.UIDelegate = self;
         webView.navigationDelegate = self;
@@ -293,7 +295,8 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     
     [webView addObserver:self forKeyPath: @"loading" options: NSKeyValueObservingOptionNew context:nil];
 
-    [webViewController.view addSubview:webView];
+    //[webViewController.view addSubview:webView];
+    [parent.view addSubview:webView];
 
     return self;
 }
@@ -804,6 +807,7 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     return view.contentScaleFactor;
 }
 
+// TODO: We remove visibility when going fullscreen, maybe add event listener to just before we rotate (is there one?) and remove it there, this way we should makes sure auto rotate does not affect webview (unless it does even when not in the hierarchy?)
 - (void)setVisibility:(BOOL)visibility
 {
     if (webView == nil)
@@ -812,7 +816,9 @@ static NSMutableArray *_instances = [[NSMutableArray alloc] init];
     
     if (visibility) {
         if ([webView superview] == nil) {
-            [webViewController.view addSubview:webView];
+            UIViewController *parent = UnityGetGLViewController();
+            [parent.view addSubview:webView];
+            //[webViewController.view addSubview:webView];
         }
     } else {
         if ([webView superview] != nil) {
