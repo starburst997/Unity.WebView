@@ -47,7 +47,7 @@ static WKProcessPool *_sharedProcessPool;
     WKPreferences *preferences = [[WKPreferences alloc] init];
     preferences.javaScriptEnabled = true;
     preferences.plugInsEnabled = true;
-    [controller addScriptMessageHandler:self name:@"unityControl"];
+    [controller addScriptMessageHandler:self name:@"unityControlMac"];
     configuration.userContentController = controller;
     configuration.processPool = _sharedProcessPool;
     
