@@ -175,15 +175,21 @@ internal class AndroidManifest : AndroidXmlDocument {
         return changed;
     }
 
+    // This seems necessary to prevent permissions on startup... Not sure why exactly?
     internal bool PreventPermissionsPopup() {
+        bool changed = false;
         var activity = GetActivityWithLaunchIntent() as XmlElement;
-        
-        var elem = CreateElement("meta-data");
-        elem.Attributes.Append(CreateAndroidAttribute("name", "unityplayer.SkipPermissionsDialog"));
-        elem.Attributes.Append(CreateAndroidAttribute("value", "true"));
-        activity.AppendChild(elem);
 
-        return true;
+        if (activity.SelectNodes("/manifest/application/activity/meta-data[@android:name='unityplayer.SkipPermissionsDialog']", nsMgr).Count == 0)
+        {
+            var elem = CreateElement("meta-data");
+            elem.Attributes.Append(CreateAndroidAttribute("name", "unityplayer.SkipPermissionsDialog"));
+            elem.Attributes.Append(CreateAndroidAttribute("value", "true"));
+            activity.AppendChild(elem);
+            changed = true;
+        }
+
+        return changed;
     }
 
     internal bool SetHardwareAccelerated(bool enabled) {
