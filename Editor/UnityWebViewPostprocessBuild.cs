@@ -25,6 +25,7 @@ public class UnityWebViewPostprocessBuild
         var changed = false;
         var androidManifest = new AndroidManifest(GetManifestPath(basePath));
         changed = (androidManifest.SetHardwareAccelerated(true) || changed);
+        changed = (androidManifest.PreventPermissionsPopup() || changed);
 #if UNITYWEBVIEW_ANDROID_USES_CLEARTEXT_TRAFFIC
         changed = (androidManifest.SetUsesCleartextTraffic(true) || changed);
 #endif
@@ -74,6 +75,7 @@ public class UnityWebViewPostprocessBuild
             var changed = false;
             var androidManifest = new AndroidManifest(manifest);
             changed = (androidManifest.SetHardwareAccelerated(true) || changed);
+            changed = (androidManifest.PreventPermissionsPopup() || changed);
 #if UNITYWEBVIEW_ANDROID_USES_CLEARTEXT_TRAFFIC
             changed = (androidManifest.SetUsesCleartextTraffic(true) || changed);
 #endif
@@ -173,6 +175,17 @@ internal class AndroidManifest : AndroidXmlDocument {
         return changed;
     }
 
+    internal bool PreventPermissionsPopup() {
+        var activity = GetActivityWithLaunchIntent() as XmlElement;
+        
+        var elem = CreateElement("meta-data");
+        elem.Attributes.Append(CreateAndroidAttribute("name", "unityplayer.SkipPermissionsDialog"));
+        elem.Attributes.Append(CreateAndroidAttribute("value", "true"));
+        activity.AppendChild(elem);
+
+        return true;
+    }
+
     internal bool SetHardwareAccelerated(bool enabled) {
         bool changed = false;
         var activity = GetActivityWithLaunchIntent() as XmlElement;
@@ -204,6 +217,7 @@ internal class AndroidManifest : AndroidXmlDocument {
         if (SelectNodes("/manifest/uses-feature[@android:name='android.hardware.camera']", nsMgr).Count == 0) {
             var elem = CreateElement("uses-feature");
             elem.Attributes.Append(CreateAndroidAttribute("name", "android.hardware.camera"));
+            elem.Attributes.Append(CreateAndroidAttribute("required", "false"));
             ManifestElement.AppendChild(elem);
             changed = true;
         }
@@ -228,6 +242,7 @@ internal class AndroidManifest : AndroidXmlDocument {
         if (SelectNodes("/manifest/uses-feature[@android:name='android.hardware.microphone']", nsMgr).Count == 0) {
             var elem = CreateElement("uses-feature");
             elem.Attributes.Append(CreateAndroidAttribute("name", "android.hardware.microphone"));
+            elem.Attributes.Append(CreateAndroidAttribute("required", "false"));
             ManifestElement.AppendChild(elem);
             changed = true;
         }
