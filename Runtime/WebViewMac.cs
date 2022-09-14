@@ -479,7 +479,7 @@ public class WebViewMac : MonoBehaviour
     {
         if (onJS != null)
         {
-            message = UnityWebRequest.UnEscapeURL(message);
+            //message = UnityWebRequest.UnEscapeURL(message);
             onJS(message);
         }
     }
@@ -488,7 +488,7 @@ public class WebViewMac : MonoBehaviour
     {
         if (onHooked != null)
         {
-            message = UnityWebRequest.UnEscapeURL(message);
+            //message = UnityWebRequest.UnEscapeURL(message);
             onHooked(message);
         }
     }

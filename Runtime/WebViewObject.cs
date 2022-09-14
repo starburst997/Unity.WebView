@@ -887,13 +887,14 @@ public class WebViewObject : MonoBehaviour
     {
         if (onJS != null)
         {
-#if !UNITY_ANDROID
+            // No idea why this would be necessary? Messed up sending Base64 data...
+/*#if !UNITY_ANDROID
 #if UNITY_2018_4_OR_NEWER
             message = UnityWebRequest.UnEscapeURL(message);
 #else // UNITY_2018_4_OR_NEWER
             message = WWW.UnEscapeURL(message);
 #endif // UNITY_2018_4_OR_NEWER
-#endif // !UNITY_ANDROID
+#endif // !UNITY_ANDROID*/
             onJS(message);
         }
     }
@@ -902,13 +903,13 @@ public class WebViewObject : MonoBehaviour
     {
         if (onHooked != null)
         {
-#if !UNITY_ANDROID
+/*#if !UNITY_ANDROID
 #if UNITY_2018_4_OR_NEWER
             message = UnityWebRequest.UnEscapeURL(message);
 #else // UNITY_2018_4_OR_NEWER
             message = WWW.UnEscapeURL(message);
 #endif // UNITY_2018_4_OR_NEWER
-#endif // !UNITY_ANDROID
+#endif // !UNITY_ANDROID*/
             onHooked(message);
         }
     }
