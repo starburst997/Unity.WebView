@@ -278,7 +278,7 @@ public class WebViewObject : MonoBehaviour
         Callback err = null,
         Callback httpErr = null,
         Callback ld = null,
-        int androidForceDarkMode = 0,  // 0: follow system setting, 1: force dark off, 2: force dark on
+        int androidForceDarkMode = 1,  // 0: follow system setting, 1: force dark off, 2: force dark on
         bool enableWKWebView = false,
         int  wkContentMode = 0,  // 0: recommended, 1: mobile, 2: desktop
         Callback started = null,
