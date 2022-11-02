@@ -107,6 +107,16 @@ static WKProcessPool *_sharedProcessPool;
     return self;
 }
 
+- (float)scaleFactor
+{
+    for (NSWindow * window in [NSApp orderedWindows]) {
+        // Assume first window is the main one (there wouldn't be any other window)
+        return [window backingScaleFactor];
+    }
+    
+    return 1;
+}
+
 - (void)opaqueBackground
 {
     if (webView == nil)
@@ -535,6 +545,7 @@ extern "C" {
     void _CWebViewPlugin_LoadHTML(void *instance, const char *html, const char *baseUrl);
     void _CWebViewPlugin_EvaluateJS(void *instance, const char *url);
     int _CWebViewPlugin_Progress(void *instance);
+    float _CWebViewPlugin_ScaleFactor(void *instance);
     BOOL _CWebViewPlugin_CanGoBack(void *instance);
     BOOL _CWebViewPlugin_CanGoForward(void *instance);
     void _CWebViewPlugin_GoBack(void *instance);
@@ -627,6 +638,12 @@ int _CWebViewPlugin_Progress(void *instance)
 {
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
     return [webViewPlugin progress];
+}
+
+float _CWebViewPlugin_ScaleFactor(void *instance)
+{
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
+    return [webViewPlugin scaleFactor];
 }
 
 BOOL _CWebViewPlugin_CanGoBack(void *instance)

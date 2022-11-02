@@ -651,6 +651,11 @@ public class WebViewObject : MonoBehaviour
 #endif
     }
 
+    public float ScaleFactor()
+    {
+        return 1;
+    }
+    
     public int Progress()
     {
 #if UNITY_WEBPLAYER || UNITY_WEBGL

@@ -87,6 +87,8 @@ public class WebViewMac : MonoBehaviour
     [DllImport("WebView")]
     private static extern int _CWebViewPlugin_Progress(IntPtr instance);
     [DllImport("WebView")]
+    private static extern float _CWebViewPlugin_ScaleFactor(IntPtr instance);
+    [DllImport("WebView")]
     private static extern bool _CWebViewPlugin_CanGoBack(IntPtr instance);
     [DllImport("WebView")]
     private static extern bool _CWebViewPlugin_CanGoForward(IntPtr instance);
@@ -238,11 +240,15 @@ public class WebViewMac : MonoBehaviour
         mMarginRelativeComputed = r;
 
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        var factor = ScaleFactor();
+        
         int x = (int) ml;
         int y = (int) mb;
         int width = (int)(Screen.width - (ml + mr));
         int height = (int)(Screen.height - (mb + mt));
-        _CWebViewPlugin_SetRect(webView, x, y, width, height);
+        
+        // TODO: Move scale factor to native side?
+        _CWebViewPlugin_SetRect(webView, (int) (x / factor), (int) (y / factor), (int) (width / factor), (int) (height / factor));
 #endif
     }
 
@@ -342,6 +348,17 @@ public class WebViewMac : MonoBehaviour
 #endif
         
         return 100;
+    }
+    
+    public float ScaleFactor()
+    {
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        if (webView == IntPtr.Zero)
+            return 1;
+        return _CWebViewPlugin_ScaleFactor(webView);
+#endif
+        
+        return 1;
     }
 
     public bool CanGoBack()
