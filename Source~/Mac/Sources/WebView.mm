@@ -119,9 +119,11 @@ static WKProcessPool *_sharedProcessPool;
 
 - (void)setCursor: (int) cursor
 {
-    // TODO: Create a custom solution to fix unity incompetence
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wundeclared-selector"
+    // TODO: Create a custom solution to fix unity incompetence with retina display and cursors...
+    // Pragma doesn't work, use alternative solution then with `NSSelectorFromString`
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wundeclared-selector"
+    SEL cursorSelector = NULL;
     switch (cursor) 
     {
         case 0x00:
@@ -129,10 +131,12 @@ static WKProcessPool *_sharedProcessPool;
             [[NSCursor arrowCursor] set];
             break;
         case 0x05: // Move
-            [[NSCursor _moveCursor] set];
+            //[[NSCursor _moveCursor] set];
+            cursorSelector = NSSelectorFromString(@"_moveCursor");
             break;
         case 0x03: // Resize
-            [[NSCursor _windowResizeEastWestCursor] set];
+            //[[NSCursor _windowResizeEastWestCursor] set];
+            cursorSelector = NSSelectorFromString(@"_windowResizeEastWestCursor");
             break;
         case 0x04: // Closed hand
             [[NSCursor closedHandCursor] set];
@@ -144,10 +148,12 @@ static WKProcessPool *_sharedProcessPool;
             [[NSCursor pointingHandCursor] set]; // Same as "hand", need to 
             break;
         case 0x07: // Zoom In
-            [[NSCursor _zoomInCursor] set];
+            //[[NSCursor _zoomInCursor] set];
+            cursorSelector = NSSelectorFromString(@"_zoomInCursor");
             break;
         case 0x08: // Zoom Out
-            [[NSCursor _zoomOutCursor] set];
+            //[[NSCursor _zoomOutCursor] set];
+            cursorSelector = NSSelectorFromString(@"_zoomOutCursor");
             break;
         case 0x09: // Open Hand
             [[NSCursor openHandCursor] set];
@@ -171,7 +177,14 @@ static WKProcessPool *_sharedProcessPool;
             [[NSCursor crosshairCursor] set]; // Same as select...
             break;
     }
-#pragma clang diagnostic pop
+    
+    if (cursorSelector && [NSCursor respondsToSelector:cursorSelector])
+    {
+        id object = [NSCursor performSelector:cursorSelector];
+        if ([object isKindOfClass:[NSCursor class]])
+            [(NSCursor*) object set];
+    }
+//#pragma clang diagnostic pop
 }
 
 - (void)opaqueBackground
