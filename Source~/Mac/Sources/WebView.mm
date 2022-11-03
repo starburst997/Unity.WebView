@@ -132,7 +132,8 @@ static WKProcessPool *_sharedProcessPool;
             break;
         case 0x05: // Move
             //[[NSCursor _moveCursor] set];
-            cursorSelector = NSSelectorFromString(@"_moveCursor");
+            //cursorSelector = NSSelectorFromString(@"_moveCursor"); // Look like a white arrow?
+            [[NSCursor arrowCursor] set]; // Might as well use the arrow
             break;
         case 0x03: // Resize
             //[[NSCursor _windowResizeEastWestCursor] set];
