@@ -161,7 +161,7 @@ static WKProcessPool *_sharedProcessPool;
         case 0x0A: // Add
             [[NSCursor dragCopyCursor] set];
             break;
-        case 0x0A: // Remove
+        case 0x0B: // Remove
             [[NSCursor disappearingItemCursor] set]; // Not really the correct one, but unused
             break;
         case 0x0C: // Dot
