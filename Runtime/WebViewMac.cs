@@ -141,7 +141,7 @@ public class WebViewMac : MonoBehaviour
         onLoaded = ld;
         onHooked = hooked;
         
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+#if (UNITY_STANDALONE_OSX && !UNITY_EDITOR_WIN) || UNITY_EDITOR_OSX
         _CWebViewPlugin_InitStatic(
             Application.platform == RuntimePlatform.OSXEditor,
             SystemInfo.graphicsDeviceType == GraphicsDeviceType.Metal);
@@ -355,7 +355,7 @@ public class WebViewMac : MonoBehaviour
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         if (webView == IntPtr.Zero)
             return 1;
-        return 1f / _CWebViewPlugin_ScaleFactor(webView);
+        return _CWebViewPlugin_ScaleFactor(webView);
 #endif
         
         return 1;
