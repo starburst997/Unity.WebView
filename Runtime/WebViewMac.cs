@@ -89,6 +89,8 @@ public class WebViewMac : MonoBehaviour
     [DllImport("WebView")]
     private static extern float _CWebViewPlugin_ScaleFactor(IntPtr instance);
     [DllImport("WebView")]
+    private static extern float _CWebViewPlugin_SetCursor(IntPtr instance, int cursor);
+    [DllImport("WebView")]
     private static extern bool _CWebViewPlugin_CanGoBack(IntPtr instance);
     [DllImport("WebView")]
     private static extern bool _CWebViewPlugin_CanGoForward(IntPtr instance);
@@ -361,6 +363,15 @@ public class WebViewMac : MonoBehaviour
         return 1;
     }
 
+    public void SetCursor(int cursor)
+    {
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
+        if (webView == IntPtr.Zero)
+            return;
+        _CWebViewPlugin_SetCursor(webView, cursor);
+#endif
+    }
+    
     public bool CanGoBack()
     {
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX

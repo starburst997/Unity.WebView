@@ -117,6 +117,63 @@ static WKProcessPool *_sharedProcessPool;
     return 1;
 }
 
+- (void)setCursor: (int) cursor
+{
+    // TODO: Create a custom solution to fix unity incompetence
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    switch (cursor) 
+    {
+        case 0x00:
+        case 0x01: // Normal
+            [[NSCursor arrowCursor] set];
+            break;
+        case 0x05: // Move
+            [[NSCursor _moveCursor] set];
+            break;
+        case 0x03: // Resize
+            [[NSCursor _windowResizeEastWestCursor] set];
+            break;
+        case 0x04: // Closed hand
+            [[NSCursor closedHandCursor] set];
+            break;
+        case 0x02: // Hand
+            [[NSCursor pointingHandCursor] set];
+            break;
+        case 0x06: // Hand Down
+            [[NSCursor pointingHandCursor] set]; // Same as "hand", need to 
+            break;
+        case 0x07: // Zoom In
+            [[NSCursor _zoomInCursor] set];
+            break;
+        case 0x08: // Zoom Out
+            [[NSCursor _zoomOutCursor] set];
+            break;
+        case 0x09: // Open Hand
+            [[NSCursor openHandCursor] set];
+            break;
+        case 0x0A: // Add
+            [[NSCursor dragCopyCursor] set];
+            break;
+        case 0x0A: // Remove
+            [[NSCursor disappearingItemCursor] set]; // Not really the correct one, but unused
+            break;
+        case 0x0C: // Dot
+            [[NSCursor arrowCursor] set]; // None available... This one we can cheat and use Unity instead, it will be bigger but better than nothing, will come up with a better fix eventually
+            break;
+        case 0x0D: // Normal Inverted
+            [[NSCursor arrowCursor] set]; // Same as normal...
+            break;
+        case 0x0E: // Select
+            [[NSCursor crosshairCursor] set];
+            break;
+        case 0x0F: // Select Inverted
+            [[NSCursor crosshairCursor] set]; // Same as select...
+            break;
+    }
+#pragma clang diagnostic pop
+}
+
 - (void)opaqueBackground
 {
     if (webView == nil)
@@ -546,6 +603,7 @@ extern "C" {
     void _CWebViewPlugin_EvaluateJS(void *instance, const char *url);
     int _CWebViewPlugin_Progress(void *instance);
     float _CWebViewPlugin_ScaleFactor(void *instance);
+    void _CWebViewPlugin_SetCursor(void *instance, int cursor);
     BOOL _CWebViewPlugin_CanGoBack(void *instance);
     BOOL _CWebViewPlugin_CanGoForward(void *instance);
     void _CWebViewPlugin_GoBack(void *instance);
@@ -644,6 +702,12 @@ float _CWebViewPlugin_ScaleFactor(void *instance)
 {
     CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
     return [webViewPlugin scaleFactor];
+}
+
+void _CWebViewPlugin_SetCursor(void *instance, int cursor)
+{
+    CWebViewPlugin *webViewPlugin = (__bridge CWebViewPlugin *) instance;
+    [webViewPlugin setCursor: cursor];
 }
 
 BOOL _CWebViewPlugin_CanGoBack(void *instance)
