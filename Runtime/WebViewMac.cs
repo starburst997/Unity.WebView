@@ -355,7 +355,7 @@ public class WebViewMac : MonoBehaviour
 #if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
         if (webView == IntPtr.Zero)
             return 1;
-        return _CWebViewPlugin_ScaleFactor(webView);
+        return 1f / _CWebViewPlugin_ScaleFactor(webView);
 #endif
         
         return 1;
