@@ -28,7 +28,7 @@ public class CUnityPlayerActivity
             int maxMode = 0;
             float maxHZ = 60f;
             for(Display.Mode m:modes) {
-                if (maxHZ < m.getRefreshRate()) {
+                if (maxHZ <= m.getRefreshRate()) {
                     maxHZ = m.getRefreshRate();
                     maxMode = m.getModeId();
                 }
